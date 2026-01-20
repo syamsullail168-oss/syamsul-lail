@@ -1,0 +1,867 @@
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css");
+
+:root{
+  --bg:#0d1117;
+  --card:#161b22;
+  --text:#e6edf3;
+  --muted:#9da7b3;
+  --accent:#2ea043;
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:system-ui, sans-serif;
+}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  padding-bottom:80px;
+}
+
+.container{
+  max-width:420px;
+  margin:auto;
+  padding:16px;
+}
+
+.card{
+  padding:16px;
+}
+
+.sholat-list .row{
+  display:flex;
+  justify-content:space-between;
+  padding:6px 0;
+  border-bottom:1px solid #222;
+  font-size:15px;
+}
+.sholat-list .row:last-child{
+  border-bottom:none;
+}
+.sholat-list b{
+  color:#ffffff;
+}
+
+.sholat-list .row.next{
+  color: #ffffff;
+}
+.sholat-list .row.next b{
+  color:var(--accent);
+}
+
+/* Countdown */
+.countdown{
+  text-align:center;
+  font-size:16px;
+  padding: 16px;
+}
+
+.countdown strong{
+  display:block;
+  font-size:22px;
+  margin-top:4px;
+}
+
+/* ===== KALENDER ===== */
+.calendar-card{
+  padding:14px;
+}
+
+/* Header */
+.calendar-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:10px;
+}
+
+.calendar-header button{
+  background:none;
+  border:none;
+  color:var(--text);
+  font-size:22px;
+  cursor:pointer;
+  padding:4px 10px;
+}
+
+.calendar-header button:active{
+  transform:scale(.9);
+}
+
+.calendar-title{
+  font-size:15px;
+  font-weight:600;
+}
+
+/* Grid */
+.calendar-grid{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:6px;
+}
+
+/* Nama hari */
+.day-names{
+  margin-bottom:6px;
+}
+
+.day-name{
+  text-align:center;
+  font-size:12px;
+  font-weight:600;
+  color:var(--muted);
+}
+
+.day-name.jumat{
+  color:var(--accent);
+}
+
+.day-name.ahad{
+  color:#f87171;
+}
+
+/* Hari */
+.day{
+  background:#0b0f14;
+  border-radius:10px;
+  min-height:58px;
+  padding:6px 4px;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+
+.day.empty{
+  background:transparent;
+  box-shadow:none;
+  color: var(--muted);
+  justify-content: center;
+}
+
+.day .date{
+  font-size:14px;
+  font-weight:700;
+}
+
+.day .hijri{
+  font-size:15px;
+  color:var(--muted);
+}
+
+.day .pasaran{
+  font-size:10px;
+  color:#ffffff;
+}
+
+/* Jumat & Ahad */
+.day.jumat .date{
+  color:var(--accent);
+}
+
+.day.ahad .date{
+  color:#f87171;
+}
+
+/* Hari ini */
+.day.today{
+  background:linear-gradient(13deg,#000,#234);
+  color:#fff;
+}
+
+.day.today .hijri,
+.day.today .pasaran{
+  color:#eafff1;
+}
+.day.prev-month, .day.next-month{
+  background:#0b0f14;
+  opacity:0.4;
+  justify-content: center;
+}
+/* Footer */
+.footer{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:var(--card);
+  display:flex;
+  justify-content:space-around;
+  padding:10px 0;
+  border-top:1px solid #222;
+}
+
+.footer .menu{
+  text-align:center;
+  font-size:12px;
+  color:var(--muted);
+}
+.footer .menu i{
+  font-size:25px;
+}
+.footer .menu.active,
+.footer .menu:hover {
+  color: var(--accent);
+}
+
+
+/* =========================
+   PANEL PENGATURAN
+========================= */
+
+.settings-container{
+  position: fixed;
+  inset: 0;
+  background: var(--bg, #0f172a);
+  color: var(--text, #e5e7eb);
+  z-index: 999;
+  display: none;
+
+  /* animasi */
+  animation: slideUp .35s ease;
+  overflow-y: auto;
+}
+
+/* Animasi muncul */
+@keyframes slideUp{
+  from{
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to{
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* =========================
+   HEADER PENGATURAN
+========================= */
+.settings-header{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: #020617;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.settings-header h2{
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.back-btn{
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 1.3rem;
+  cursor: pointer;
+}
+
+/* =========================
+   ISI PENGATURAN
+========================= */
+.settings-content{
+  padding: 16px;
+}
+
+.settings-section{
+  margin-bottom: 20px;
+}
+
+.settings-section h3{
+  font-size: .9rem;
+  color: #38bdf8;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.settings-item{
+  background: #020617;
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: .9rem;
+}
+
+/* =========================
+   BUTTON & TOGGLE
+========================= */
+.settings-btn{
+  background: #0ea5e9;
+  color: #020617;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: .75rem;
+  cursor: pointer;
+}
+
+.settings-btn.secondary{
+  background: #1e293b;
+  color: #e5e7eb;
+}
+
+/* Toggle switch */
+.toggle{
+  position: relative;
+  width: 42px;
+  height: 22px;
+}
+
+.toggle input{
+  display: none;
+}
+
+.toggle span{
+  position: absolute;
+  inset: 0;
+  background: #1e293b;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.toggle span::before{
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  left: 2px;
+  top: 2px;
+  background: #e5e7eb;
+  border-radius: 50%;
+  transition: .25s;
+}
+
+.toggle input:checked + span{
+  background: #0ea5e9;
+}
+
+.toggle input:checked + span::before{
+  transform: translateX(20px);
+}
+
+/* =========================
+   RESPONSIVE HALUS
+========================= */
+@media (min-width: 768px){
+  .settings-container{
+    max-width: 480px;
+    margin: auto;
+    border-radius: 16px;
+  }
+}
+
+/* ================================
+   APP SETTINGS STYLE
+================================ */
+
+.settings-page{
+  max-width:420px;
+  margin:auto;
+  padding:8px 0 80px;
+}
+
+/* Section */
+.settings-section{
+  margin-top:18px;
+}
+
+.settings-section-title{
+  padding:6px 16px;
+  font-size:12px;
+  font-weight:600;
+  color:var(--accent);
+}
+.setting-item{
+  color: var(--muted);
+}
+/* Item */
+.settings-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 16px;
+  background:var(--card);
+  border-bottom:1px solid #222;
+}
+
+.settings-item:last-child{
+  border-bottom:none;
+}
+
+/* Left text */
+.settings-text{
+  display:flex;
+  flex-direction:column;
+}
+
+.settings-text strong{
+  font-size:14px;
+  font-weight:500;
+}
+
+.settings-text span{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:2px;
+}
+
+/* Right value */
+.settings-value{
+  font-size:13px;
+  color:#998;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.settings-value i{
+  font-size:14px;
+  opacity:.6;
+}
+
+/* Toggle look */
+.settings-switch{
+  background:#1f2933;
+  border-radius:999px;
+  padding:4px 10px;
+  font-size:12px;
+}
+
+/* Danger item */
+.settings-item.danger strong{
+  color:var(--danger);
+}
+
+.sheet{
+  position:fixed;
+  bottom:-100%;
+  left:0;
+  width:100%;
+  background:#1f2933;
+  border-radius:16px 16px 0 0;
+  padding:16px;
+  transition:.3s;
+  z-index:999;
+}
+body.light .sheet{
+  background: #ffffff;
+}
+
+.sheet.show{ bottom:0 }
+
+.sheet-option{
+  padding:14px;
+  color:#fff;
+}
+body.light .sheet-option{
+  padding:14px;
+  color:#111;
+}
+
+.sheet-option:active{
+  background:#1e1e1e;
+}
+
+.sheet-header{
+  text-align:center;
+  font-weight:bold;
+  margin-bottom:10px;
+}
+
+/* ===============================
+   LIGHT MODE
+   default = DARK
+   aktif saat body.classList.add("light")
+================================ */
+
+body.light {
+  background: #f2f4f7;
+  color: #111;
+}
+
+/* CONTAINER */
+body.light .container {
+  background: #f2f4f7;
+  color: #333333;
+}
+
+/* SETTINGS PAGE */
+body.light .settings-container {
+  background: #f2f4f7;
+}
+
+/* HEADER */
+body.light .settings-header {
+  background: #ffffff;
+  border-bottom: 1px solid #e0e0e0;
+}
+body.light .settings-header h2,
+body.light .settings-header i {
+  color: #333;
+}
+
+/* SECTION */
+body.light .settings-section-title {
+  color: #666;
+}
+
+/* ITEM */
+body.light .settings-item {
+  background: #ffffff;
+  border-bottom: 1px solid #e6e6e6;
+}
+body.light .settings-item.danger strong {
+  color: #c62828;
+}
+
+/* TEXT */
+body.light .settings-text strong {
+  color: #211;
+}
+body.light .settings-text span {
+  color: #111111;
+}
+
+/* VALUE */
+body.light .settings-value,
+body.light .settings-value span,
+body.light .settings-value i {
+  color: #444;
+}
+
+/* SWITCH */
+body.light .settings-switch span {
+  color: #1e88e5;
+}
+
+/* BOTTOM SHEET */
+body.light .sheet-overlay {
+  background: rgba(0,0,0,0.4);
+}
+body.light .sheet-panel {
+  background: #ffffff;
+  color: #111;
+}
+body.light .sheet-header {
+  border-bottom: 1px solid #e0e0e0;
+}
+body.light .sheet-option {
+  border-bottom: 1px solid #eeeeee;
+}
+body.light .sheet-option:hover {
+  background: #f1f3f6;
+}
+
+/* CARD */
+body.light .card {
+  background: #ffffff;
+  color: #111;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* SHOLAT LIST */
+body.light .sholat-list .row {
+  border-bottom: 1px solid #eaeaea;
+}
+body.light .sholat-list span {
+  color: #555;
+}
+body.light .sholat-list b {
+  color: #666666;
+}
+
+/* COUNTDOWN */
+body.light .countdown {
+  background: #ffffff;
+  color: green;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+/* CALENDAR */
+body.light .calendar-card {
+  background: #ffffff;
+}
+body.light .calendar-header {
+  border-bottom: 1px solid #e0e0e0;
+}
+body.light .calendar-title {
+  color: #333;
+}
+body.light .day-name {
+  color: #555;
+}
+body.light .day-name.ahad,
+body.light .day-name.jumat {
+  color: #c62828;
+}
+body.light .calendar-days .day {
+  color: #111;
+}
+body.light .calendar-days .day.empty {
+  color: #bbb;
+}
+body.light .calendar-days .day.today {
+  background: #1e88e5;
+  
+}
+
+/* FOOTER */
+body.light .footer {
+  background: #ffffff;
+  border-top: 1px solid #e0e0e0;
+}
+body.light .footer .menu {
+  color: #555;
+}
+body.light .footer .menu.active,
+body.light .footer .menu:hover {
+  color: #1e88e5;
+}
+
+/* ===============================
+   LIGHT MODE – KALENDER (PELENGKAP)
+================================ */
+
+body.light .calendar-grid {
+  background: #ffffff;
+}
+
+/* Grid tanggal */
+body.light .calendar-days {
+  background: #ffffff;
+}
+
+/* Kotak tanggal */
+body.light .calendar-days .day {
+  border: 1px solid #eeeeee;
+  background: #ffffff;
+  transition: background 0.2s;
+}
+
+/* Hover (rasa app) */
+body.light .calendar-days .day:hover {
+  background: #f2f6ff;
+}
+
+/* Hari ini */
+body.light .calendar-days .day.today {
+  background: #ddd;
+}
+
+/* Ahad & Jumat */
+body.light .calendar-days .day.ahad {
+  color: #d32f2f;
+}
+body.light .calendar-days .day.jumat {
+  color: #c62828;
+  font-weight: 600;
+}
+
+/* Tanggal kosong */
+body.light .calendar-days .day.empty {
+  background: #faffff;
+  border-color: #f0f0f0;
+}
+
+/* Hijriyah kecil (jika pakai span) */
+body.light .calendar-days .day .hijri {
+  color: #666;
+}
+
+/* Pasaran / info tambahan */
+body.light .calendar-days .day .pasaran {
+  color: #888;
+}
+
+/* Header bulan */
+body.light .calendar-header button {
+  color: #444;
+}
+body.light .calendar-header button:hover {
+  color: #1e88e5;
+}
+
+/* Nama hari */
+body.light .day-name {
+  background: #fafafa;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+.hisab-container{
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--bg, #0f1115);
+  display: none;
+  overflow-y: auto;
+}
+
+
+.hisab-menu,
+.hisab-sub{
+  display:none;
+}
+
+.hisab-menu.active,
+.hisab-sub.active{
+  display:block;
+}
+
+.settings-item{
+  padding:14px;
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+
+.settings-item span{
+  display:block;
+  font-size:12px;
+  opacity:.7;
+}
+
+.settings-item.disabled{
+  opacity:.4;
+}
+
+
+/* ===============================
+   OVERLAY
+================================ */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.70);
+  z-index: 1000;
+}
+
+.hidden {
+  display: none;
+}
+
+/* ===============================
+   PANEL HISAB
+================================ */
+.hisab-panel {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 420px;
+  background: #3f4746;
+  border-radius: 18px 18px 0 0;
+  z-index: 1001;
+  padding-bottom: 16px;
+  max-height: 100vh;
+  overflow-y: auto;
+}
+
+
+/* ===============================
+   HEADER
+================================ */
+.hisab-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.hisab-header h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #fff;
+  font-weight: 600;
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.hisab-tabs {
+  display: flex;
+  gap: 22px;
+  padding: 10px 16px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.hisab-tabs .tab {
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 13px;
+  padding-bottom: 8px;
+  cursor: pointer;
+}
+
+.hisab-tabs .tab.active {
+  color: #ff3d7f;
+  border-bottom: 2px solid #ff3d7f;
+}
+.hisab-content {
+  padding: 14px 16px;
+}
+
+.field {
+  margin-bottom: 14px;
+}
+
+.field label {
+  display: block;
+  font-size: 12px;
+  color: #cfcfcf;
+  margin-bottom: 4px;
+}
+
+.field span {
+  font-size: 14px;
+  color: #fff;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255,255,255,0.4);
+  color: #fff;
+  padding: 6px 2px;
+  font-size: 14px;
+}
+
+.field input:focus,
+.field select:focus {
+  outline: none;
+  border-bottom-color: #ff3d7f;
+}
+
+.btn-process {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #e0e0e0;
+  color: #111;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.poinHasilHisab {
+  margin-top: 50px;
+  margin-bottom:20px;
+}

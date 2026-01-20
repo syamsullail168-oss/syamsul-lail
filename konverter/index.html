@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konverter Hijri ke Masehi</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: Arial, sans-serif; 
+            background: #f5f5f5; 
+            padding: 20px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+        }
+        .container { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 10px; 
+            box-shadow: 0 0 10px rgba(0,0,0,0.1); 
+            max-width: 400px; 
+            width: 100%; 
+        }
+        h1 { 
+            text-align: center; 
+            color: #2d6a4f; 
+            margin-bottom: 20px; 
+        }
+        .input-group { 
+            margin-bottom: 15px; 
+        }
+        label { 
+            display: block; 
+            margin-bottom: 5px; 
+            color: #333; 
+        }
+        input { 
+            width: 100%; 
+            padding: 10px; 
+            border: 1px solid #ddd; 
+            border-radius: 5px; 
+            font-size: 16px; 
+        }
+        .button-group { 
+            display: flex; 
+            gap: 10px; 
+            margin-top: 20px; 
+        }
+        button { 
+            flex: 1; 
+            padding: 12px; 
+            border: none; 
+            border-radius: 5px; 
+            font-size: 16px; 
+            cursor: pointer; 
+        }
+        #convert-btn { 
+            background: #2d6a4f; 
+            color: white; 
+        }
+        #reset-btn { 
+            background: #ddd; 
+            color: #333; 
+        }
+        .result { 
+            margin-top: 30px; 
+            padding: 20px; 
+            background: #f8f9fa; 
+            border-radius: 5px; 
+            text-align: center; 
+        }
+        .result h2 { 
+            color: #2d6a4f; 
+            margin-bottom: 10px; 
+        }
+        #hasil-konversi { 
+            font-size: 18px; 
+            color: #333; 
+        }
+        
+        .hasil-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.hasil-table tr {
+  border-bottom: 1px solid #eee;
+}
+
+.hasil-table tr:last-child {
+  border-bottom: none;
+}
+
+.hasil-table td {
+  padding: 10px;
+}
+
+.hasil-table td:first-child {
+  color: #666;
+  font-weight: 500;
+  width: 40%;
+}
+
+.hasil-table td.value {
+  color: #2d6a4f;
+  font-weight: bold;
+  text-align: right;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Konverter Hijri ke Masehi</h1>
+        
+        <div class="input-group">
+            <label for="tanggal">Tanggal</label>
+            <input type="number" id="tanggal" min="1" max="30" value="1">
+        </div>
+        
+        <div class="input-group">
+            <label for="bulan">Bulan</label>
+            <input type="number" id="bulan" min="1" max="12" value="7">
+        </div>
+        
+        <div class="input-group">
+            <label for="tahun">Tahun</label>
+            <input type="number" id="tahun" min="1" max="1500" value="1447">
+        </div>
+        
+        <div class="button-group">
+            <button id="convert-btn">Konversi</button>
+            <button id="reset-btn">Reset</button>
+        </div>
+        
+        <div class="result">
+            <h2>Hasil</h2>
+            <div id="hasil-konversi">Masukkan tanggal</div>
+        </div>
+    </div>
+
+    <script>document.getElementById('convert-btn').addEventListener('click', function() {
+    // KONVERSI KE NUMBER!
+    const tgl = parseInt(document.getElementById('tanggal').value);
+    const bln = parseInt(document.getElementById('bulan').value);
+    const thn = parseInt(document.getElementById('tahun').value);
+    
+    let tth = thn - 1;
+    let daor = Math.trunc(tth / 30);
+    let st = tth % 30;
+    let jth = daor * 10631;
+    let thst = st * 354;
+    
+    let ak;
+    if (st <= 4) ak = 1;
+    else if (st <= 6) ak = 2;
+    else if (st <= 9) ak = 3;
+    else if (st <= 12) ak = 4;
+    else if (st <= 15) ak = 5;
+    else if (st <= 17) ak = 6;
+    else if (st <= 20) ak = 7;
+    else if (st <= 23) ak = 8;
+    else if (st <= 25) ak = 9;
+    else if (st <= 29) ak = 10;
+    
+    const jhdsMap = { 
+        1: 0, 2: 30, 3: 59, 4: 89, 5: 118, 
+        6: 148, 7: 177, 8: 207, 9: 236, 
+        10: 266, 11: 295, 12: 325 
+    };
+    
+    let jhds = jhdsMap[bln];
+    let jhhk = jth + thst + ak + jhds + tgl;
+    let jhmk = 227014 + jhhk; 
+    // Lanjutan setelah jhmk
+let tkt_ttM = jhmk / 365.2425;
+let ttM = Math.trunc(tkt_ttM);
+let sttm = tkt_ttM - ttM;
+let jhp = Math.round(sttm * 365.2425) ;
+let thnm = ttM + 1;
+
+// Tentukan b-masehi (bulan Masehi) dari jhp
+let b_masehi;
+let b_masehi_nama;
+if (jhp <= 31) { b_masehi = 1; b_masehi_nama = "Januari"; }
+else if (jhp <= 59) { b_masehi = 2; b_masehi_nama = "Februari"; }
+else if (jhp <= 90) { b_masehi = 3; b_masehi_nama = "Maret"; }
+else if (jhp <= 120) { b_masehi = 4; b_masehi_nama = "April"; }
+else if (jhp <= 151) { b_masehi = 5; b_masehi_nama = "Mei"; }
+else if (jhp <= 181) { b_masehi = 6; b_masehi_nama = "Juni"; }
+else if (jhp <= 212) { b_masehi = 7; b_masehi_nama = "Juli"; }
+else if (jhp <= 243) { b_masehi = 8; b_masehi_nama = "Agustus"; }
+else if (jhp <= 273) { b_masehi = 9; b_masehi_nama = "September"; }
+else if (jhp <= 304) { b_masehi = 10; b_masehi_nama = "Oktober"; }
+else if (jhp <= 334) { b_masehi = 11; b_masehi_nama = "November"; }
+else { b_masehi = 12; b_masehi_nama = "Desember"; }
+
+// x(tglmm) - jumlah hari sebelum bulan ini
+let x_tglmm;
+switch(b_masehi) {
+    case 1: x_tglmm = 0; break;
+    case 2: x_tglmm = 31; break;
+    case 3: x_tglmm = 59; break;
+    case 4: x_tglmm = 90; break;
+    case 5: x_tglmm = 120; break;
+    case 6: x_tglmm = 151; break;
+    case 7: x_tglmm = 181; break;
+    case 8: x_tglmm = 212; break;
+    case 9: x_tglmm = 243; break;
+    case 10: x_tglmm = 273; break;
+    case 11: x_tglmm = 304; break;
+    case 12: x_tglmm = 334; break;
+    default: x_tglmm = 0;
+}
+
+let tglmm = Math.round(jhp - x_tglmm);
+
+// Hari dalam minggu (xh mod 7)
+let xh = jhhk % 7;
+let hari;
+switch(xh) {
+    case 0: hari = "Kamis"; break;
+    case 1: hari = "Jumat"; break;
+    case 2: hari = "Sabtu"; break;
+    case 3: hari = "Minggu"; break;
+    case 4: hari = "Senin"; break;
+    case 5: hari = "Selasa"; break;
+    case 6: hari = "Rabu"; break;
+    default: hari = "-";
+}
+
+// Pahing (xh mod 5)
+let xp = jhhk % 5;
+let pasar;
+switch(xp) {
+    case 0: pasar = "Kliwon"; break;
+    case 1: pasar = "Legi"; break;
+    case 2: pasar = "Pahing"; break;
+    case 3: pasar = "Pon"; break;
+    case 4: pasar = "Wage"; break;
+    default: pasar = "-";
+}
+let hasilTgl = tglmm === 0 ? 31 : tglmm;
+// Tampilkan hasil lengkap
+document.getElementById('hasil-konversi').innerHTML = `
+<table class="hasil-table">
+    <tr><td>ttH:</td><td class="value">${tth}</td></tr>
+    <tr><td>daor:</td><td class="value">${daor}</td></tr>
+    <tr><td>st:</td><td class="value">${st}</td></tr>
+    <tr><td>jth:</td><td class="value">${jth}</td></tr>
+    <tr><td>thst:</td><td class="value">${thst}</td></tr>
+    <tr><td>ak:</td><td class="value">${ak}</td></tr>
+    <tr><td>jhds:</td><td class="value">${jhds}</td></tr>
+    <tr><td>jhhk:</td><td class="value">${jhhk}</td></tr>
+    <tr><td>jhmk:</td><td class="value">${jhmk}</td></tr>
+    <tr><td>tkt(ttM):</td><td class="value">${tkt_ttM.toFixed(6)}</td></tr>
+    <tr><td>ttM:</td><td class="value">${ttM}</td></tr>
+    <tr><td>sttm:</td><td class="value">${sttm.toFixed(6)}</td></tr>
+    <tr><td>jhp:</td><td class="value">${Math.round(jhp)}</td></tr>
+    <tr><td>thnm:</td><td class="value">${thnm}</td></tr>
+    <tr><td>b-masehi:</td><td class="value">${b_masehi_nama}</td></tr>
+    <tr><td>x(tglmm):</td><td class="value">${x_tglmm}</td></tr>
+    <tr><td>tglmm:</td><td class="value">${tglmm}</td></tr>
+    <tr><td>xh:</td><td class="value">${xh}</td></tr>
+    <tr><td>h:</td><td class="value">${hari}</td></tr>
+    <tr><td>xp:</td><td class="value">${xp}</td></tr>
+    <tr><td>p:</td><td class="value">${pasar}</td></tr>
+</table>
+
+<div style="margin-top: 20px; padding: 15px; background: #e8f5e9; border-radius: 5px; text-align: center;">
+    <div style="font-size: 24px; font-weight: bold; color: #2d6a4f;">
+        ${hari} ${pasar}
+    </div>
+    <div style="font-size: 28px; font-weight: bold; color: #1b4332; margin: 10px 0;">
+        ${hasilTgl} ${b_masehi_nama} ${thnm}
+    </div>
+</div>
+`;})
+
+        
+        document.getElementById('reset-btn').addEventListener('click', function() {
+            document.getElementById('tanggal').value = '1';
+            document.getElementById('bulan').value = '7';
+            document.getElementById('tahun').value = '1447';
+            document.getElementById('hasil-konversi').innerHTML = 'Masukkan tanggal';
+        });
+    </script>
+</body>
+</html>
