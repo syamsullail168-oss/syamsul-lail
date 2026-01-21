@@ -760,7 +760,7 @@ body.light .day-name {
   border-radius: 18px 18px 0 0;
   z-index: 1001;
   padding-bottom: 16px;
-  max-height: 100vh;
+  max-height: 90vh;
   overflow-y: auto;
 }
 
