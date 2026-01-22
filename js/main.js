@@ -204,35 +204,41 @@ function renderCalendar(){
   document.getElementById('yearName').innerText  = currentYear;
 
   /* ==== HEADER HIJRI (AWAL–AKHIR) ==== */
-const hijriStart = getHijri(new Date(currentYear, currentMonth, 1));
-const lastDay    = new Date(currentYear, currentMonth + 1, 0).getDate();
-const hijriEnd   = getHijri(new Date(currentYear, currentMonth, lastDay));
+  const hijriStart = getHijri(new Date(currentYear, currentMonth, 1));
+  const lastDay    = new Date(currentYear, currentMonth + 1, 0).getDate();
+  const hijriEnd   = getHijri(new Date(currentYear, currentMonth, lastDay));
 
-let hijriText;
+  let hijriText;
 
-if (hijriStart.month !== hijriEnd.month) {
-  if (hijriStart.year === hijriEnd.year) {
-    hijriText =
-      namaBulanHijri[hijriStart.month - 1] +
-      ' – ' +
-      namaBulanHijri[hijriEnd.month - 1] +
-      ' ' +
-      toArab(hijriStart.year);
+  if (hijriStart.month !== hijriEnd.month) {
+    if (hijriStart.year === hijriEnd.year) {
+      hijriText =
+        namaBulanHijri[hijriStart.month - 1] +
+        ' – ' +
+        namaBulanHijri[hijriEnd.month - 1] +
+        ' ' +
+        toArab(hijriStart.year);
+    } else {
+      hijriText =
+        namaBulanHijri[hijriStart.month - 1] + ' ' + toArab(hijriStart.year) +
+        ' – ' +
+        namaBulanHijri[hijriEnd.month - 1] + ' ' + toArab(hijriEnd.year);
+    }
   } else {
     hijriText =
-      namaBulanHijri[hijriStart.month - 1] + ' ' + toArab(hijriStart.year) +
-      ' – ' +
-      namaBulanHijri[hijriEnd.month - 1] + ' ' + toArab(hijriEnd.year);
+      namaBulanHijri[hijriStart.month - 1] +
+      ' ' +
+      toArab(hijriStart.year);
   }
-} else {
-  hijriText =
-    namaBulanHijri[hijriStart.month - 1] +
-    ' ' +
-    toArab(hijriStart.year);
-}
 
-document.getElementById('hijriMonthYear').innerText = hijriText;
-  
+  document.getElementById('hijriMonthYear').innerText = hijriText;
+
+  /* ===== TANGGAL HARI INI (REALTIME) ===== */
+  const todayxxx = new Date();
+  const tDate  = todayxxx.getDate();
+  const tMonth = todayxxx.getMonth();
+  const tYear  = todayxxx.getFullYear();
+
   /* =============== DATA KALENDER =============== */
 
   const firstDay    = new Date(currentYear, currentMonth, 1).getDay();
@@ -257,6 +263,15 @@ document.getElementById('hijriMonthYear').innerText = hijriText;
     let cls = 'day';
     if(date.getDay() === 0) cls += ' ahad';
     if(date.getDay() === 5) cls += ' jumat';
+
+    /* ===== HARI INI ===== */
+    if (
+      d === tDate &&
+      currentMonth === tMonth &&
+      currentYear === tYear
+    ) {
+      cls += ' today';
+    }
 
     daysEl.innerHTML += `
       <div class="${cls}">
