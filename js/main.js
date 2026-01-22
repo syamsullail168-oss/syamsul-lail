@@ -26,9 +26,6 @@ function timeToSeconds(t){
 
 function pad(n){ return String(n).padStart(2,'0'); }
 
-/* ====================================================
-   JADWAL SHOLAT
-==================================================== */
 function julianDay(y,m,d){
   if(m<=2){ y--; m+=12; }
   const A = Math.floor(y/100);
