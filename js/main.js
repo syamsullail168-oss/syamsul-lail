@@ -525,12 +525,13 @@ function resetTheme() {
 
 
 /* ===============================
-   ELEMENT UTAMA
+   ELEMENT UTAMA HISAB
 ================================ */
 const btnMenuHisab   = document.getElementById('menu-hisab'); // footer
 const overlayHisab   = document.getElementById('hisabOverlay');
 const panelHisab     = document.getElementById('panelHisab');
 const btnCloseHisab  = document.getElementById('closeHisab');
+
 
 /* ===============================
    TAB & KONTEN HISAB
@@ -1482,3 +1483,130 @@ if (btnBackToIjtima) {
     contentAkhir.classList.remove('hidden');
   };
 }
+
+
+// ===== AMBIL ELEMEN =====
+const menuKalkulator = document.getElementById("menu-kalkulator");
+
+const overlay   = document.getElementById("warisOverlay");
+const panelInput = document.getElementById("panelKalkulatorWaris");
+const panelHasil = document.getElementById("panelHasilWaris");
+
+const btnClose  = panelInput.querySelector(".btn-close");
+const btnHitungWaris = document.getElementById("btnHitungWaris")
+const btnBack   = document.getElementById("btnBackWaris");
+
+// ===== FUNGSI BUKA INPUT =====
+function bukaKalkulator() {
+  overlay.classList.remove("hidden");
+  panelInput.classList.remove("hidden");
+  panelHasil.classList.add("hidden");
+}
+
+// ===== FUNGSI TUTUP SEMUA =====
+function tutupKalkulator() {
+  overlay.classList.add("hidden");
+  panelInput.classList.add("hidden");
+  panelHasil.classList.add("hidden");
+}
+
+// ===== FUNGSI KE HASIL =====
+function tampilHasil() {
+  panelInput.classList.add("hidden");
+  panelHasil.classList.remove("hidden");
+}
+
+// ===== EVENT =====
+menuKalkulator.addEventListener("click", bukaKalkulator);
+btnClose.addEventListener("click", tutupKalkulator);
+btnHitungWaris.addEventListener("click", tampilHasil);
+btnBack.addEventListener("click", bukaKalkulator);
+
+// =====================
+// REFERENSI DASAR
+// =====================
+const genderRadios = document.querySelectorAll('input[name="mayitGender"]');
+const warisRows = document.querySelectorAll(".waris-row");
+
+// =====================
+// HELPER
+// =====================
+function setRowDisabled(row, disabled = true) {
+  const checkbox = row.querySelector('input[type="checkbox"]');
+  const minus = row.querySelector("button:nth-of-type(1)");
+  const plus  = row.querySelector("button:nth-of-type(2)");
+  const jumlah = row.querySelector(".jumlah");
+
+  checkbox.checked = false;
+  jumlah.textContent = "0";
+
+  checkbox.disabled = disabled;
+  minus.disabled = true;
+  plus.disabled = true;
+}
+
+// =====================
+// LOGIKA CHECKBOX
+// =====================
+warisRows.forEach(row => {
+  const checkbox = row.querySelector('input[type="checkbox"]');
+  const minus = row.querySelector("button:nth-of-type(1)");
+  const plus  = row.querySelector("button:nth-of-type(2)");
+  const jumlah = row.querySelector(".jumlah");
+  const nama = row.querySelector(".nama").innerText.toLowerCase();
+
+  let max = Infinity;
+  if (nama.includes("suami")) max = 1;
+  if (nama.includes("istri")) max = 4;
+  if (nama === "ayah") max = 1;
+  if (nama === "ibu") max = 1;
+
+  checkbox.addEventListener("change", () => {
+    if (checkbox.checked) {
+      jumlah.textContent = "1";
+      minus.disabled = false;
+      plus.disabled = false;
+    } else {
+      jumlah.textContent = "0";
+      minus.disabled = true;
+      plus.disabled = true;
+    }
+  });
+
+  minus.addEventListener("click", () => {
+    let val = parseInt(jumlah.textContent);
+    if (val > 1) jumlah.textContent = val - 1;
+  });
+
+  plus.addEventListener("click", () => {
+    let val = parseInt(jumlah.textContent);
+    if (val < max) jumlah.textContent = val + 1;
+  });
+});
+
+// =====================
+// LOGIKA JENIS KELAMIN MAYIT
+// =====================
+function updatePasangan() {
+  const isLaki = genderRadios[0].checked;
+
+  warisRows.forEach(row => {
+    const nama = row.querySelector(".nama").innerText.toLowerCase();
+
+    if (nama === "suami") {
+      isLaki ? setRowDisabled(row, true) : setRowDisabled(row, false);
+    }
+
+    if (nama === "istri") {
+      isLaki ? setRowDisabled(row, false) : setRowDisabled(row, true);
+    }
+  });
+}
+
+// default
+updatePasangan();
+
+// event radio
+genderRadios.forEach(radio => {
+  radio.addEventListener("change", updatePasangan);
+});
