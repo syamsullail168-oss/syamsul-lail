@@ -144,6 +144,8 @@ function startCountdown(j){
 const namaBulan = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 const pasaran   = ['Legi','Pahing','Pon','Wage','Kliwon'];
 
+// TAMBAHKAN DATA BULAN HIJRIYAH DARI HASIL HISAB
+// HITUNG BERAPA HARI SETIAP BULANNYA DARI HASIL HISAB SULAMUN NAYIREIN
 const hijriMonthLengths = {
   1446:[30,29,30,29,30,29,30,29,30,29,29,29],
   1447:[30,29,30,29,30,30,30,30,29,29,30,30]
@@ -538,12 +540,12 @@ const btnCloseHisab  = document.getElementById('closeHisab');
 ================================ */
 const tabs = document.querySelectorAll('.hisab-tabs .tab');
 
-const contentAkhir   = document.getElementById('hisabAkhirBulan');
+const inputIjtima   = document.getElementById('hisabAkhirBulan');
 const panelInputSholat = document.getElementById('panelInputSholat');
 const contentKonversiH_M  = document.getElementById('konveriH_M');
 const contentKonversiM_H  = document.getElementById('konveriM_H');
 
-const contents = [contentAkhir, panelInputSholat, contentKonversiH_M, contentKonversiM_H];
+const contents = [inputIjtima, panelInputSholat, contentKonversiH_M, contentKonversiM_H];
 
 /* ===============================
    PANEL HASIL HISAB
@@ -564,7 +566,7 @@ if (btnMenuHisab) {
     tabs[0].classList.add('active');
 
     contents.forEach(c => c.classList.add('hidden'));
-    contentAkhir.classList.remove('hidden');
+    inputIjtima.classList.remove('hidden');
 
     // pastikan panel hasil tertutup
     if (panelHasilHisab) panelHasilHisab.classList.add('hidden');
@@ -1480,47 +1482,75 @@ if (btnBackToIjtima) {
     tabs[0].classList.add('active');
 
     contents.forEach(c => c.classList.add('hidden'));
-    contentAkhir.classList.remove('hidden');
+    inputIjtima.classList.remove('hidden');
   };
 }
 
 
-// ===== AMBIL ELEMEN =====
-const menuKalkulator = document.getElementById("menu-kalkulator");
+/* ===============================
+   ELEMENT UTAMA KALKULATOR
+================================ */
+const btnMenuKalkulator   = document.getElementById('menu-kalkulator'); // footer
+const overlayKalkulator   = document.getElementById('kalkulatorOverlay');
+const panelKalkulator     = document.getElementById('panelKalkulator');
+const btnCloseKalkulator  = document.getElementById('closeKalkulator');
 
-const overlay   = document.getElementById("warisOverlay");
-const panelInput = document.getElementById("panelKalkulatorWaris");
-const panelHasil = document.getElementById("panelHasilWaris");
+/* ===============================
+   TAB & KONTEN KALKULATOR
+================================ */
+const tabsK = document.querySelectorAll('.kalkulator-tabs .tab');
+const inputWaris  = document.getElementById('inputWaris');
+const contentsK = [inputWaris];
+/* ===============================
+   PANEL HASIL KALKULATOR > WARIS
+================================ */
+const panelHasilWaris = document.getElementById('panelHasilWaris');
+const btnProsesWaris  = document.getElementById('btnHitungWaris');
+const btnBackWaris = document.getElementById('btnBackWaris');
 
-const btnClose  = panelInput.querySelector(".btn-close");
-const btnHitungWaris = document.getElementById("btnHitungWaris")
-const btnBack   = document.getElementById("btnBackWaris");
+/* ===============================
+   OPEN PANEL HISAB
+================================ */
+if (btnMenuKalkulator) {
+  btnMenuKalkulator.onclick = () => {
+    overlayKalkulator.classList.remove('hidden');
+    panelKalkulator.classList.remove('hidden');
 
-// ===== FUNGSI BUKA INPUT =====
-function bukaKalkulator() {
-  overlay.classList.remove("hidden");
-  panelInput.classList.remove("hidden");
-  panelHasil.classList.add("hidden");
+    // reset tab
+    tabsK.forEach(t => t.classList.remove('active'));
+    tabsK[0].classList.add('active');
+
+    contentsK.forEach(c => c.classList.add('hidden'));
+    inputWaris.classList.remove('hidden');
+
+    // pastikan panel hasil tertutup
+    if (panelHasilWaris) panelHasilWaris.classList.add('hidden');
+  };
+}
+/* ===============================
+   CLOSE PANEL HISAB
+================================ */
+function closeKalkulatorPanel(){
+  overlayKalkulator.classList.add('hidden');
+  panelKalkulator.classList.add('hidden');
+  if (panelHasilWaris) panelHasilWaris.classList.add('hidden');
 }
 
-// ===== FUNGSI TUTUP SEMUA =====
-function tutupKalkulator() {
-  overlay.classList.add("hidden");
-  panelInput.classList.add("hidden");
-  panelHasil.classList.add("hidden");
-}
+overlayKalkulator.onclick  = closeKalkulatorPanel;
+closeKalkulator.onclick = closeKalkulatorPanel;
 
-// ===== FUNGSI KE HASIL =====
-function tampilHasil() {
-  panelInput.classList.add("hidden");
-  panelHasil.classList.remove("hidden");
-}
+/* ===============================
+   TAB HANDLER
+================================ */
+tabsK.forEach((tab, index) => {
+  tab.onclick = () => {
+    tabsK.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
 
-// ===== EVENT =====
-menuKalkulator.addEventListener("click", bukaKalkulator);
-btnClose.addEventListener("click", tutupKalkulator);
-btnHitungWaris.addEventListener("click", tampilHasil);
-btnBack.addEventListener("click", bukaKalkulator);
+    contentsK.forEach(c => c.classList.add('hidden'));
+    contentsK[index].classList.remove('hidden');
+  };
+});
 
 // =====================
 // REFERENSI DASAR
@@ -1546,7 +1576,7 @@ function setRowDisabled(row, disabled = true) {
 }
 
 // =====================
-// LOGIKA CHECKBOX
+// CHECKBOX AHLI WARIS
 // =====================
 warisRows.forEach(row => {
   const checkbox = row.querySelector('input[type="checkbox"]');
@@ -1585,7 +1615,7 @@ warisRows.forEach(row => {
 });
 
 // =====================
-// LOGIKA JENIS KELAMIN MAYIT
+// JENIS KELAMIN MAYIT
 // =====================
 function updatePasangan() {
   const isLaki = genderRadios[0].checked;

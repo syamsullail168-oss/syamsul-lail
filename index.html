@@ -66,7 +66,8 @@
        <button class="tab">SHOLAT & QIBLAT</button>
        <button class="tab">KONVERT H M</button>
        <button class="tab">KONVERT M H</button> 
-       </div><div class="hisab-content" id="hisabAkhirBulan">
+       </div>
+     <div class="hisab-content" id="hisabAkhirBulan">
   <div class="field">
     <label>Tahun Kumpulan</label>
     <input type="number" value="1440" id="tahunmajmuah">
@@ -202,21 +203,25 @@
 </div>
 
 <!-- PANEL KALKULATOR WARIS -->
-<div id="warisOverlay" class="overlay hidden"></div>
-<div id="panelKalkulatorWaris" class="hisab-panel hidden">
+<div id="kalkulatorOverlay" class="overlay hidden"></div>
+<div id="panelKalkulator" class="hisab-panel hidden">
 
   <div class="hisab-header">
-    <h3>Kalkulator Waris Islam</h3>
-    <button class="btn-close"><i class="bi-x"></i>
+    <h3>Input Kalkulator</h3>
+    <button class="btn-close" id="closeKalkulator"><i class="bi-x"></i>
     </button>
   </div>
+  <div class="kalkulator-tabs">
+       <button class="tab active">HITUNG WARIS SEDERHANA</button>
+       <button class="tab">KALKULATOR HARI</button>
+  </div>
 
-  <div class="card hisab-content">
+  <div class="card hisab-content" id="inputWaris">
 
     <!-- HARTA -->
     <div class="input-group">
       <label>Harta Peninggalan</label>
-      <input type="number" placeholder="Masukkan total harta">
+      <input type="number" id="inputHarta" value="1000000">
     </div>
 
     <!-- JENIS KELAMIN MAYIT -->
@@ -279,27 +284,6 @@
 
 <hr>
 
-<!-- CUCU DARI ANAK LAKI -->
-<h4>Cucu (dari Anak Laki-laki)</h4>
-
-<div class="waris-row">
-  <input type="checkbox">
-  <span class="nama">Cucu Laki-laki</span>
-  <button>-</button>
-  <span class="jumlah">0</span>
-  <button>+</button>
-</div>
-
-<div class="waris-row">
-  <input type="checkbox">
-  <span class="nama">Cucu Perempuan</span>
-  <button>-</button>
-  <span class="jumlah">0</span>
-  <button>+</button>
-</div>
-
-<hr>
-
 <!-- ORANG TUA -->
 <h4>Orang Tua</h4>
 
@@ -321,160 +305,6 @@
 
 <hr>
 
-<!-- KAKEK & NENEK -->
-<h4>Kakek & Nenek</h4>
-
-<div class="waris-row">
-  <input type="checkbox">
-  <span class="nama">Kakek (Ayah dari Ayah)</span>
-  <button>-</button>
-  <span class="jumlah">0</span>
-  <button>+</button>
-</div>
-
-<div class="waris-row">
-  <input type="checkbox">
-  <span class="nama">Nenek dari Ibu</span>
-  <button>-</button>
-  <span class="jumlah">0</span>
-  <button>+</button>
-</div>
-
-<div class="waris-row">
-  <input type="checkbox">
-  <span class="nama">Nenek dari Ayah</span>
-  <button>-</button>
-  <span class="jumlah">0</span>
-  <button>+</button>
-</div>
-
-<hr>
-
-<!-- SAUDARA KANDUNG -->
-<h4>Saudara Kandung</h4>
-
-<div class="waris-row">
-  <input type="checkbox">
-  <span class="nama">Saudara Laki-laki Kandung</span>
-  <button>-</button>
-  <span class="jumlah">0</span>
-  <button>+</button>
-</div>
-
-<div class="waris-row">
-  <input type="checkbox">
-  <span class="nama">Saudara Perempuan Kandung</span>
-  <button>-</button>
-  <span class="jumlah">0</span>
-  <button>+</button>
-</div>
-
-<hr>
-
-<!-- SAUDARA SEAYAH -->
-<h4>Saudara Seayah</h4>
-
-<div class="waris-row">
-  <input type="checkbox">
-  <span class="nama">Saudara Laki-laki Seayah</span>
-  <button>-</button>
-  <span class="jumlah">0</span>
-  <button>+</button>
-</div>
-
-<div class="waris-row">
-  <input type="checkbox">
-  <span class="nama">Saudara Perempuan Seayah</span>
-  <button>-</button>
-  <span class="jumlah">0</span>
-  <button>+</button>
-</div>
-
-<hr>
-<!-- SAUDARA SEIBU -->
-<h4>Saudara Seibu</h4>
-
-<div class="waris-row">
-  <input type="checkbox">
-  <span class="nama">Saudara Laki-laki Seibu</span>
-  <button>-</button>
-  <span class="jumlah">0</span>
-  <button>+</button>
-</div>
-
-<div class="waris-row">
-  <input type="checkbox">
-  <span class="nama">Saudara Perempuan Seibu</span>
-  <button>-</button>
-  <span class="jumlah">0</span>
-  <button>+</button>
-</div>
-
-<hr>
-
-<!-- KEPONAKAN -->
-<h4>Kemenakan</h4>
-
-<div class="waris-row">
-  <input type="checkbox">
-  <span class="nama">Anak Laki-laki Saudara Kandung</span>
-  <button>-</button>
-  <span class="jumlah">0</span>
-  <button>+</button>
-</div>
-
-<div class="waris-row">
-  <input type="checkbox">
-  <span class="nama">Anak Laki-laki Saudara Seayah</span>
-  <button>-</button>
-  <span class="jumlah">0</span>
-  <button>+</button>
-</div>
-
-<hr>
-
-<!-- PAMAN -->
-<h4>Paman</h4>
-
-<div class="waris-row">
-  <input type="checkbox">
-  <span class="nama">Paman Kandung</span>
-  <button>-</button>
-  <span class="jumlah">0</span>
-  <button>+</button>
-</div>
-
-<div class="waris-row">
-  <input type="checkbox">
-  <span class="nama">Paman Seayah</span>
-  <button>-</button>
-  <span class="jumlah">0</span>
-  <button>+</button>
-</div>
-
-<hr>
-
-<!-- SEPUPU -->
-<h4>Sepupu</h4>
-
-<div class="waris-row">
-  <input type="checkbox">
-  <span class="nama">Anak Laki-laki Paman Kandung</span>
-  <button>-</button>
-  <span class="jumlah">0</span>
-  <button>+</button>
-</div>
-
-<div class="waris-row">
-  <input type="checkbox">
-  <span class="nama">Anak Laki-laki Paman Seayah</span>
-  <button>-</button>
-  <span class="jumlah">0</span>
-  <button>+</button>
-</div>
-    
-
-
     <button class="btn-process" id="btnHitungWaris">
       Hitung Waris
     </button>
@@ -482,6 +312,7 @@
   </div>
 </div>
 
+<!-- PANEL HASIL -->
 <div id="panelHasilWaris" class="hisab-panel hidden">
 
   <div class="hisab-header">
@@ -499,7 +330,6 @@
 </div>
 
 
-<!-- PANEL HASIL -->
 <div id="panelHasilKonversiM_H" class="hisab-panel hidden">
   <div class="hisab-header">
     <button id="btnBackToKonversiM_H" class="btn-back">
@@ -550,7 +380,7 @@
     <i class="bi bi-gear-fill"></i><br>Pengaturan
   </div>
   <div class="menu" id="menu-hisab"><i class="bi bi-moon-fill"></i><br>Hisab</div>
-  <div class="menu" id="menu-kalkulator"><i class="bi bi-calculator-fill"></i><br>Kalkulator</div>
+  <div class="menu" id="menu-kalkulator"><i class="bi bi-calculator-fill"></i><br>Warist</div>
   <div class="menu"><i class="bi bi-justify"></i><br>Lainnya</div>
 </div>
 <script type="module" src="js/main.js"></script>

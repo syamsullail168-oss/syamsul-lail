@@ -972,3 +972,24 @@ h4 {
 .overlay.show {
   display: block;
 }
+
+.kalkulator-tabs {
+  display: flex;
+  gap: 22px;
+  padding: 10px 16px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.kalkulator-tabs .tab {
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 13px;
+  padding-bottom: 8px;
+  cursor: pointer;
+}
+
+.kalkulator-tabs .tab.active {
+  color: #ff3d7f;
+  border-bottom: 2px solid #ff3d7f;
+}
