@@ -814,6 +814,7 @@ body.light .day-name {
 }
 .hisab-content {
   padding: 14px 16px;
+  animation: slideUp .7200s ease;
 }
 
 .field {
