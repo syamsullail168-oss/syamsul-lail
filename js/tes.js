@@ -1,8 +1,6 @@
-
-
-  /* =====================
-     LOGIKA HISAB KALKULATOR WARIS
-     ===================== */
+/* =============================
+  LOGIKA HISAB KALKULATOR WARIS
+  ============================== */
 
 function hitungWaris() {
 

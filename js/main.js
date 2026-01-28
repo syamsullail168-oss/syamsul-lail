@@ -1408,11 +1408,9 @@ switch(xp) {
     default: pasar = "-";
 }
 let hasilTgl = tglmm === 0 ? 31 : tglmm;
-  
-  
    document.getElementById('hasilHisabAkhirBulan').innerHTML = `
    
-      <div class="card sholat-list">
+   <div class="card sholat-list">
     <div class="row"><span>Total Alamah</span><b>${hasilAkhirAlamah3}</b></div>
     <div class="row"><span>Total Hissoh</span><b>${hasilAkhirHissoh3}</b></div>
     <div class="row"><span>Total Wasath</span><b>${hasilAkhirWasat3}</b></div>
@@ -1528,7 +1526,7 @@ if (btnMenuKalkulator) {
   };
 }
 /* ===============================
-   CLOSE PANEL HISAB
+   CLOSE PANEL KALKULATOR
 ================================ */
 function closeKalkulatorPanel(){
   overlayKalkulator.classList.add('hidden');
@@ -1632,11 +1630,32 @@ function updatePasangan() {
     }
   });
 }
-
-// default
 updatePasangan();
 
 // event radio
 genderRadios.forEach(radio => {
   radio.addEventListener("change", updatePasangan);
 });
+
+if (btnProsesWaris) {
+  btnProsesWaris.onclick = () => {
+    inputWaris.classList.add("hidden");
+    panelHasilWaris.classList.remove("hidden");
+    
+    // HITUNGAN WARIS DISINI
+    
+  };
+}
+
+if (btnBackWaris) {
+  btnBackWaris.onclick = () => {
+    panelHasilWaris.classList.add('hidden');
+    inputWaris.classList.remove('hidden');
+
+    tabsK.forEach(t => t.classList.remove('active'));
+    tabsK[0].classList.add('active');
+
+    contentsK.forEach(c => c.classList.add('hidden'));
+    inputWaris.classList.remove('hidden');
+  };
+}
