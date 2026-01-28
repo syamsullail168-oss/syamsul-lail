@@ -381,6 +381,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(!navigator.geolocation) return;
     navigator.geolocation.getCurrentPosition(pos=>{
       locationSettings.lat = pos.coords.latitude;
+      locationSettings.lat = pos.coords.latitude;
       locationSettings.lon = pos.coords.longitude;
       localStorage.setItem('lat', locationSettings.lat);
       localStorage.setItem('lon', locationSettings.lon);
