@@ -609,7 +609,7 @@ const btnBackToKonversiH_M = document.getElementById("btnBackToKonversiH_M");
 const hasilKonversiH_M  = document.getElementById("hasilKonversiH_M");
 
 if(btnProsesKonversiH_M){
-  btnProsesKonversiH_M.onclick=()=>{contentKonversiH_M.classList.add("hidden");panelHasilKonversiH_M.classList.remove("hidden");const tgl=parseInt(document.getElementById('inputTanggalHM').value);const bln=parseInt(document.getElementById('inputBulanHM').value);const thn=parseInt(document.getElementById('inputTahunHM').value);const bulanHijriyah={1:"Muharram",2:"Safar",3:"Rabiul Awal",4:"Rabiul Akhir",5:"Jumadil Awal",6:"Jumadil Akhir",7:"Rajab",8:"Sya'ban",9:"Ramadhan",10:"Syawal",11:"Dzulqaidah",12:"Dzulhijjah"};const namaBulanHijri=bulanHijriyah[bln]||`Bulan ${bln}`;let tth=thn-1;let daor=Math.trunc(tth/30);let st=tth%30;let jth=daor*10631;let thst=st*354;let ak;if(st<=4)ak=1;else if(st<=6)ak=2;else if(st<=9)ak=3;else if(st<=12)ak=4;else if(st<=15)ak=5;else if(st<=17)ak=6;else if(st<=20)ak=7;else if(st<=23)ak=8;else if(st<=25)ak=9;else if(st<=29)ak=10;const jhdsMap={1:0,2:30,3:59,4:89,5:118,6:148,7:177,8:207,9:236,10:266,11:295,12:325};let jhds=jhdsMap[bln];let jhhk=jth+thst+ak+jhds+tgl;let jhmk=227014+jhhk;let tkt_ttM=jhmk/365.2425;let ttM=Math.trunc(tkt_ttM);let sttm=tkt_ttM-ttM;let jhp=Math.round(sttm*365.2425);let thnm=ttM+1;let b_masehi,b_masehi_nama;if(jhp<=31){b_masehi=1;b_masehi_nama="Januari";}else if(jhp<=59){b_masehi=2;b_masehi_nama="Februari";}else if(jhp<=90){b_masehi=3;b_masehi_nama="Maret";}else if(jhp<=120){b_masehi=4;b_masehi_nama="April";}else if(jhp<=151){b_masehi=5;b_masehi_nama="Mei";}else if(jhp<=181){b_masehi=6;b_masehi_nama="Juni";}else if(jhp<=212){b_masehi=7;b_masehi_nama="Juli";}else if(jhp<=243){b_masehi=8;b_masehi_nama="Agustus";}else if(jhp<=273){b_masehi=9;b_masehi_nama="September";}else if(jhp<=304){b_masehi=10;b_masehi_nama="Oktober";}else if(jhp<=334){b_masehi=11;b_masehi_nama="November";}else{b_masehi=12;b_masehi_nama="Desember";}let x_tglmm;switch(b_masehi){case 1:x_tglmm=0;break;case 2:x_tglmm=31;break;case 3:x_tglmm=59;break;case 4:x_tglmm=90;break;case 5:x_tglmm=120;break;case 6:x_tglmm=151;break;case 7:x_tglmm=181;break;case 8:x_tglmm=212;break;case 9:x_tglmm=243;break;case 10:x_tglmm=273;break;case 11:x_tglmm=304;break;case 12:x_tglmm=334;break;default:x_tglmm=0;}let tglmm=Math.round(jhp-x_tglmm);let xh=jhhk%7;let hari;switch(xh){case 0:hari="Kamis";break;case 1:hari="Jumat";break;case 2:hari="Sabtu";break;case 3:hari="Minggu";break;case 4:hari="Senin";break;case 5:hari="Selasa";break;case 6:hari="Rabu";break;default:hari="-";}let xp=jhhk%5;let pasar;switch(xp){case 0:pasar="Kliwon";break;case 1:pasar="Legi";break;case 2:pasar="Pahing";break;case 3:pasar="Pon";break;case 4:pasar="Wage";break;default:pasar="-";}let hasilTgl=tglmm===0?31:tglmm;hasilKonversiH_M.innerHTML=`<div class="card sholat-list"><div class="row"><span>ttH</span><b>${tth}</b></div><div class="row"><span>daor</span><b>${daor}</b></div><div class="row"><span>st</span><b>${st}</b></div><div class="row"><span>jth</span><b>${jth}</b></div><div class="row"><span>thst</span><b>${thst}</b></div><div class="row"><span>ak</span><b>${ak}</b></div><div class="row"><span>jhds</span><b>${jhds}</b></div><div class="row"><span>jhhk</span><b>${jhhk}</b></div><div class="row"><span>jhmk</span><b>${jhmk}</b></div><div class="row"><span>tkt(ttM)</span><b>${tkt_ttM.toFixed(6)}</b></div><div class="row"><span>ttM</span><b>${ttM}</b></div><div class="row"><span>sttm</span><b>${sttm.toFixed(6)}</b></div><div class="row"><span>jhp</span><b>${Math.round(jhp)}</b></div><div class="row"><span>thnm</span><b>${thnm}</b></div><div class="row"><span>b-masehi</span><b>${b_masehi_nama}</b></div><div class="row"><span>x(tglmm)</span><b>${x_tglmm}</b></div><div class="row"><span>tglmm</span><b>${tglmm}</b></div><div class="row"><span>xh</span><b>${xh}</b></div><div class="row"><span>h</span><b>${hari}</b></div><div class="row"><span>xp</span><b>${xp}</b></div><div class="row"><span>p</span><b>${pasar}</b></div><div class="poinHasilHisab"><div><span>H: </span><b>${tgl} ${namaBulanHijri} ${thn}</b></div><div><span>M: </span><b>${hari} ${pasar}, ${hasilTgl} ${b_masehi_nama} ${thnm}</b></div></div>`;};}
+  btnProsesKonversiH_M.onclick=()=>{contentKonversiH_M.classList.add("hidden");panelHasilKonversiH_M.classList.remove("hidden");const tgl=parseInt(document.getElementById('inputTanggalHM').value);const bln=parseInt(document.getElementById('inputBulanHM').value);const thn=parseInt(document.getElementById('inputTahunHM').value);const bulanHijriyah={1:"Muharram",2:"Safar",3:"Rabiul Awal",4:"Rabiul Akhir",5:"Jumadil Awal",6:"Jumadil Akhir",7:"Rajab",8:"Sya'ban",9:"Ramadhan",10:"Syawal",11:"Dzulqaidah",12:"Dzulhijjah"};const namaBulanHijri=bulanHijriyah[bln]||`Bulan ${bln}`;let tth=thn-1;let daor=Math.trunc(tth/30);let st=tth%30;let jth=daor*10631;let thst=st*354;let ak;if(st<=4)ak=1;else if(st<=6)ak=2;else if(st<=9)ak=3;else if(st<=12)ak=4;else if(st<=15)ak=5;else if(st<=17)ak=6;else if(st<=20)ak=7;else if(st<=23)ak=8;else if(st<=25)ak=9;else if(st<=29)ak=10;const jhdsMap={1:0,2:30,3:59,4:89,5:118,6:148,7:177,8:207,9:236,10:266,11:295,12:325};let jhds=jhdsMap[bln];let jhhk=jth+thst+ak+jhds+tgl;let jhmk=227014+jhhk;let tkt_ttM=jhmk/365.2425;let ttM=Math.trunc(tkt_ttM);let sttm=tkt_ttM-ttM;let jhp=Math.round(sttm*365.2425);let thnm=ttM+1;let b_masehi,b_masehi_nama;if(jhp<=31){b_masehi=1;b_masehi_nama="Januari";}else if(jhp<=59){b_masehi=2;b_masehi_nama="Februari";}else if(jhp<=90){b_masehi=3;b_masehi_nama="Maret";}else if(jhp<=120){b_masehi=4;b_masehi_nama="April";}else if(jhp<=151){b_masehi=5;b_masehi_nama="Mei";}else if(jhp<=181){b_masehi=6;b_masehi_nama="Juni";}else if(jhp<=212){b_masehi=7;b_masehi_nama="Juli";}else if(jhp<=243){b_masehi=8;b_masehi_nama="Agustus";}else if(jhp<=273){b_masehi=9;b_masehi_nama="September";}else if(jhp<=304){b_masehi=10;b_masehi_nama="Oktober";}else if(jhp<=334){b_masehi=11;b_masehi_nama="November";}else{b_masehi=12;b_masehi_nama="Desember";}let x_tglmm;switch(b_masehi){case 1:x_tglmm=0;break;case 2:x_tglmm=31;break;case 3:x_tglmm=59;break;case 4:x_tglmm=90;break;case 5:x_tglmm=120;break;case 6:x_tglmm=151;break;case 7:x_tglmm=181;break;case 8:x_tglmm=212;break;case 9:x_tglmm=243;break;case 10:x_tglmm=273;break;case 11:x_tglmm=304;break;case 12:x_tglmm=334;break;default:x_tglmm=0;}let tglmm=Math.round(jhp-x_tglmm);let xh=jhhk%7;let hari;switch(xh){case 0:hari="Kamis";break;case 1:hari="Jumat";break;case 2:hari="Sabtu";break;case 3:hari="Minggu";break;case 4:hari="Senin";break;case 5:hari="Selasa";break;case 6:hari="Rabu";break;default:hari="-";}let xp=jhhk%5;let pasar;switch(xp){case 0:pasar="Kliwon";break;case 1:pasar="Legi";break;case 2:pasar="Pahing";break;case 3:pasar="Pon";break;case 4:pasar="Wage";break;default:pasar="-";}let hasilTgl=tglmm===0?31:tglmm;hasilKonversiH_M.innerHTML=`<div class="card sholat-list"><div class="row"><span>ttH</span><span>${tth}</span></div><div class="row"><span>daor</span><span>${daor}</span></div><div class="row"><span>st</span><span>${st}</span></div><div class="row"><span>jth</span><span>${jth}</span></div><div class="row"><span>thst</span><span>${thst}</span></div><div class="row"><span>ak</span><span>${ak}</span></div><div class="row"><span>jhds</span><span>${jhds}</span></div><div class="row"><span>jhhk</span><span>${jhhk}</span></div><div class="row"><span>jhmk</span><span>${jhmk}</span></div><div class="row"><span>tkt(ttM)</span><span>${tkt_ttM.toFixed(6)}</span></div><div class="row"><span>ttM</span><span>${ttM}</span></div><div class="row"><span>sttm</span><span>${sttm.toFixed(6)}</span></div><div class="row"><span>jhp</span><span>${Math.round(jhp)}</span></div><div class="row"><span>thnm</span><span>${thnm}</span></div><div class="row"><span>b-masehi</span><span>${b_masehi_nama}</span></div><div class="row"><span>x(tglmm)</span><span>${x_tglmm}</span></div><div class="row"><span>tglmm</span><span>${tglmm}</span></div><div class="row"><span>xh</span><span>${xh}</span></div><div class="row"><span>h</span><span>${hari}</span></div><div class="row"><span>xp</span><span>${xp}</span></div><div class="row"><span>p</span><span>${pasar}</span></div><div class="poinHasilHisab"><div><span>H: </span><span>${tgl} ${namaBulanHijri} ${thn}</span></div><div><span>M: </span><span>${hari} ${pasar}, ${hasilTgl} ${b_masehi_nama} ${thnm}</span></div></div>`;};}
 
 
 
@@ -630,7 +630,7 @@ const panelHasilKonversiM_H  = document.getElementById("panelHasilKonversiM_H");
 const btnBackToKonversiM_H = document.getElementById("btnBackToKonversiM_H");
 const hasilKonversiM_H  = document.getElementById("hasilKonversiM_H");
 
-if(btnProsesKonversiM_H){btnProsesKonversiM_H.onclick=()=>{contentKonversiM_H.classList.add("hidden");panelHasilKonversiM_H.classList.remove("hidden");const v1=parseInt(document.getElementById('inputTanggalMH').value);const v2=parseInt(document.getElementById('inputBulanMH').value);const v3=parseInt(document.getElementById('inputTahunMH').value);const mN={1:"Muharram",2:"Safar",3:"Rabiul Awal",4:"Rabiul Akhir",5:"Jumadil Awal",6:"Jumadil Akhir",7:"Rajab",8:"Sya'ban",9:"Ramadhan",10:"Syawal",11:"Dzulqaidah",12:"Dzulhijjah"};const mM={1:"Januari",2:"Februari",3:"Maret",4:"April",5:"Mei",6:"Juni",7:"Juli",8:"Agustus",9:"September",10:"Oktober",11:"November",12:"Desember"};let a=Math.trunc((14-v2)/12);let y=v3+4800-a;let m=v2+12*a-3;let jdn=v1+Math.trunc((153*m+2)/5)+365*y+Math.trunc(y/4)-Math.trunc(y/100)+Math.trunc(y/400)-32045;let jh=jdn-1948439;let d=Math.trunc(jh/10631);let s=jh%10631;let ts=Math.trunc((s-1)/354);let ht=(s-1)%354;let k=Math.trunc((11*ts+3)/30);if(ht>=k){ht-=k;}let th=d*30+ts+1;let b;if(ht<30)b=1;else if(ht<59)b=2;else if(ht<89)b=3;else if(ht<118)b=4;else if(ht<148)b=5;else if(ht<177)b=6;else if(ht<207)b=7;else if(ht<236)b=8;else if(ht<266)b=9;else if(ht<295)b=10;else if(ht<325)b=11;else b=12;const ab=[0,0,30,59,89,118,148,177,207,236,266,295,325];let t=ht-ab[b]+1;hasilKonversiM_H.innerHTML=`<div class="card sholat-list"><div class="row"><span>a</span><b>${a}</b></div><div class="row"><span>y</span><b>${y}</b></div><div class="row"><span>m</span><b>${m}</b></div><div class="row"><span>JDN</span><b>${jdn}</b></div><div class="row"><span>jh</span><b>${jh}</b></div><div class="row"><span>daur</span><b>${d}</b></div><div class="row"><span>Sisa Hari</span><b>${s}</b></div><div class="row"><span>Tahun Sisa</span><b>${ts}</b></div><div class="row"><span>kabisat</span><b>${k}</b></div><div class="row"><span>h-Tahun</span><b>${ht}</b></div><div class="row"><span>bulan</span><b>${mN[b]}</b></div><div class="row"><span>tglH</span><b>${t}</b></div><div class="poinHasilHisab"><div><span>M: </span><b>${v1} ${mM[v2]} ${v3}</b></div><div><span>H: </span><b>${t} ${mN[b]} ${th}</b></div></div></div>`;};}
+if(btnProsesKonversiM_H){btnProsesKonversiM_H.onclick=()=>{contentKonversiM_H.classList.add("hidden");panelHasilKonversiM_H.classList.remove("hidden");const v1=parseInt(document.getElementById('inputTanggalMH').value);const v2=parseInt(document.getElementById('inputBulanMH').value);const v3=parseInt(document.getElementById('inputTahunMH').value);const mN={1:"Muharram",2:"Safar",3:"Rabiul Awal",4:"Rabiul Akhir",5:"Jumadil Awal",6:"Jumadil Akhir",7:"Rajab",8:"Sya'ban",9:"Ramadhan",10:"Syawal",11:"Dzulqaidah",12:"Dzulhijjah"};const mM={1:"Januari",2:"Februari",3:"Maret",4:"April",5:"Mei",6:"Juni",7:"Juli",8:"Agustus",9:"September",10:"Oktober",11:"November",12:"Desember"};let a=Math.trunc((14-v2)/12);let y=v3+4800-a;let m=v2+12*a-3;let jdn=v1+Math.trunc((153*m+2)/5)+365*y+Math.trunc(y/4)-Math.trunc(y/100)+Math.trunc(y/400)-32045;let jh=jdn-1948439;let d=Math.trunc(jh/10631);let s=jh%10631;let ts=Math.trunc((s-1)/354);let ht=(s-1)%354;let k=Math.trunc((11*ts+3)/30);if(ht>=k){ht-=k;}let th=d*30+ts+1;let b;if(ht<30)b=1;else if(ht<59)b=2;else if(ht<89)b=3;else if(ht<118)b=4;else if(ht<148)b=5;else if(ht<177)b=6;else if(ht<207)b=7;else if(ht<236)b=8;else if(ht<266)b=9;else if(ht<295)b=10;else if(ht<325)b=11;else b=12;const ab=[0,0,30,59,89,118,148,177,207,236,266,295,325];let t=ht-ab[b]+1;hasilKonversiM_H.innerHTML=`<div class="card sholat-list"><div class="row"><span>a</span><span>${a}</span></div><div class="row"><span>y</span><span>${y}</span></div><div class="row"><span>m</span><span>${m}</span></div><div class="row"><span>JDN</span><span>${jdn}</span></div><div class="row"><span>jh</span><span>${jh}</span></div><div class="row"><span>daur</span><span>${d}</span></div><div class="row"><span>Sisa Hari</span><span>${s}</span></div><div class="row"><span>Tahun Sisa</span><span>${ts}</span></div><div class="row"><span>kabisat</span><span>${k}</span></div><div class="row"><span>h-Tahun</span><span>${ht}</span></div><div class="row"><span>bulan</span><span>${mN[b]}</span></div><div class="row"><span>tglH</span><span>${t}</span></div><div class="poinHasilHisab"><div><span>M: </span><span>${v1} ${mM[v2]} ${v3}</span></div><div><span>H: </span><span>${t} ${mN[b]} ${th}</span></div></div></div>`;};}
 
 
 
@@ -786,70 +786,70 @@ hasilHisabWaktuSholat.innerHTML = `
   
   <div class="row">
     <span>Tanggal (d-m-y)</span>
-    <b>${tanggal}-${bulan}-${tahun}</b>
+    <span>${tanggal}-${bulan}-${tahun}</span>
   </div>
   <div class="row">
     <span>Arudh Balad (φ)</span>
-    <b>${toDMS(φ)}</b>
+    <span>${toDMS(φ)}</span>
   </div>
   <div class="row">
     <span>Thul Balad (λ)</span>
-    <b>${toDMS(λ)}</b>
+    <span>${toDMS(λ)}</span>
   </div>
   <div class="row">
     <span>Ihtiyath (+WS)</span>
-    <b>${toHMS(ihtiyat)}</b>
+    <span>${toHMS(ihtiyat)}</span>
   </div>
   <div class="row">
     <span>Zaman Julian (T)</span>
-    <b>${T.toFixed(8)}</b>
+    <span>${T.toFixed(8)}</span>
   </div>
   
   <div class="row">
     <span>Julian Day (JD)</span>
-    <b>${JD.toFixed(6)}</b>
+    <span>${JD.toFixed(6)}</span>
   </div>
   <div class="row">
     <span>Thul Syamsi Wasithi (L₀)</span>
-    <b>${toDMS(L0)}</b>
+    <span>${toDMS(L0)}</span>
   </div>
   
   <div class="row">
     <span>Anomali Wasithi (M)</span>
-    <b>${toDMS(M)}</b>
+    <span>${toDMS(M)}</span>
   </div>
   
   <div class="row">
     <span>Khosshah Syamsi (C)</span>
-    <b>${toDMS(C)}</b>
+    <span>${toDMS(C)}</span>
   </div>
   
   <div class="row">
     <span>Thul Haqiqi (λ_Matahari)</span>
-    <b>${toDMS(λ_matahari)}</b>
+    <span>${toDMS(λ_matahari)}</span>
   </div>
 
   <div class="row">
     <span>Mail Syamsi (ε)</span>
-    <b>${toDMS(ε)}</b>
+    <span>${toDMS(ε)}</span>
   </div>
   
   <div class="row">
     <span>Mail Haqiqi (δ)</span>
-    <b>${toDMS(δ)}</b>
+    <span>${toDMS(δ)}</span>
   </div>
   
   <div class="row">
     <span>Daqoiq Tafawut (E)</span>
-    <b>${toHMS(E)}</b>
+    <span>${toHMS(E)}</span>
   </div>
   <div class="row">
   <span>Daqāʾiq Tafāwut (E)</span>
-  <b>${menitKeMS(E)}</b>
+  <span>${menitKeMS(E)}</span>
 </div>
   <div class="row">
     <span>Zawal Syamsi (Dzuhur)</span>
-    <b>${toHMS(zawal)}</b>
+    <span>${toHMS(zawal)}</span>
   </div>
 </div>
 
@@ -857,30 +857,30 @@ hasilHisabWaktuSholat.innerHTML = `
 <div class="card sholat-list">
   <div class="row">
     <span>Nishfu Qaus Nahr (Zawal -> Maghrib)</span>
-    <b>${toHMS(tMaghrib)}</b>
+    <span>${toHMS(tMaghrib)}</span>
   </div>
   <div class="row">
-    <span>Nishfu Qaus Lail (Magrib <--> Subuh) ÷2 WIB</span>
-    <b>${toHMS(nishfuLail)}</b>
+    <span>Nishfu Qaus Lail (M <--> S) ÷2 WIB</span>
+    <span>${toHMS(nishfuLail)}</span>
   </div>
   <div class="row">
     <span>Qaus Isya (Zawal -> Isya)</span>
-    <b>${toHMS(tIsya)}</b>
+    <span>${toHMS(tIsya)}</span>
   </div>
   
   <div class="row">
     <span>Qaus Subuh (Subuh -> Zawal)</span>
-    <b>${toHMS(tSubuh)}</b>
+    <span>${toHMS(tSubuh)}</span>
   </div>
   
   <div class="row">
     <span>Budul Qutr --> (Irtfa Ashar)</span>
-    <b>${toDMS(hAshar)}</b>
+    <span>${toDMS(hAshar)}</span>
   </div>
   
   <div class="row">
     <span>Qaus Ashar (Zawal -> Ashar)</span>
-    <b>${toHMS(tAshar)}</b>
+    <span>${toHMS(tAshar)}</span>
   </div>
 </div>
 
@@ -888,37 +888,37 @@ hasilHisabWaktuSholat.innerHTML = `
 <div class="card sholat-list">
   <div class="row">
     <span>Subuh</span>
-    <b>${toHMS(subuh)}</b>
+    <span>${toHMS(subuh)}</span>
   </div>
   
   <div class="row">
     <span>Terbit</span>
-    <b>${toHMS(terbit)}</b>
+    <span>${toHMS(terbit)}</span>
   </div>
   
   <div class="row">
     <span>Dhuha</span>
-    <b>${toHMS(dhuha)}</b>
+    <span>${toHMS(dhuha)}</span>
   </div>
   
   <div class="row">
     <span>Dzuhur</span>
-    <b>${toHMS(dzuhur)}</b>
+    <span>${toHMS(dzuhur)}</span>
   </div>
   
   <div class="row">
     <span>Ashar</span>
-    <b>${toHMS(ashar)}</b>
+    <span>${toHMS(ashar)}</span>
   </div>
   
   <div class="row">
     <span>Maghrib</span>
-    <b>${toHMS(maghrib)}</b>
+    <span>${toHMS(maghrib)}</span>
   </div>
   
   <div class="row">
     <span>Isya</span>
-    <b>${toHMS(isya)}</b>
+    <span>${toHMS(isya)}</span>
   </div>
   
 </div>
@@ -927,27 +927,27 @@ hasilHisabWaktuSholat.innerHTML = `
 <div class="card sholat-list">
   <div class="row">
     <span>Lintang Ka'bah (φ)</span>
-    <b>${toDMS(φKaaba, true)}</b>
+    <span>${toDMS(φKaaba, true)}</span>
   </div>
   
   <div class="row">
     <span>Bujur Ka'bah (λ)</span>
-    <b>${toDMS(λKaaba)}</b>
+    <span>${toDMS(λKaaba)}</span>
   </div>
   
   <div class="row">
     <span>Selisih Bujur (Δλ)</span>
-    <b>${toDMS(Δλ)}</b>
+    <span>${toDMS(Δλ)}</span>
   </div>
   
   <div class="row">
     <span>Arah Kiblat</span>
-    <b>${toDMS(arahQiblatNorm)} dari Utara</b>
+    <span>${toDMS(arahQiblatNorm)} dari Utara</span>
   </div>
   
   <div class="row">
     <span>Azimuth Ka'bah</span>
-    <b>${arahQiblatNorm.toFixed(2)}°</b>
+    <span>${arahQiblatNorm.toFixed(2)}°</span>
   </div>
 </div>
 
@@ -955,8 +955,6 @@ hasilHisabWaktuSholat.innerHTML = `
     
   };
 }
-
-
 
 if (btnBackToHitungSholat) {
   btnBackToHitungSholat.onclick = () => {
@@ -1412,51 +1410,51 @@ let hasilTgl = tglmm === 0 ? 31 : tglmm;
    document.getElementById('hasilHisabAkhirBulan').innerHTML = `
    
    <div class="card sholat-list">
-    <div class="row"><span>Total Alamah</span><b>${hasilAkhirAlamah3}</b></div>
-    <div class="row"><span>Total Hissoh</span><b>${hasilAkhirHissoh3}</b></div>
-    <div class="row"><span>Total Wasath</span><b>${hasilAkhirWasat3}</b></div>
-    <div class="row"><span>Total Khosoh</span><b>${hasilAkhirKhosoh3}</b></div>
-    <div class="row"><span>Total Markaz</span><b>${hasilAkhirMarkaz3}</b></div>
-    <div class="row"><span>Ta'dil Khosoh</span><b>${tadilkhosoh}</b></div>
-    <div class="row"><span>Ta'dil Markaz</span><b>${tadilmarkaz}</b></div>
-    <div class="row"><span>Bu'du Goer Muadal</span><b>${buduGoerMuadal2}</b></div>
-    <div class="row"><span>Hasilu Dorob</span><b>${hasildorob2}</b></div>
-    <div class="row"><span>Ta'dil Wasath</span><b>${tadilwasat2}</b></div>
-    <div class="row"><span>Muqowam Syamsi</span><b>${muqowwamsyamsi2}</b></div>
-    <div class="row"><span>Yaqoul Ijtima Pii burj</span><b>(${mq1}) ${mq2}</b></div>
-    <div class="row"><span>Hai'atul Hilal</span><b>${mq3}</b></div>
-    <div class="row"><span>Ta'dil Ayyam</span><b>${tadilayyam}</b></div>
-    <div class="row"><span>Bu'du Muadal</span><b>${budumuadal2}</b></div>
-    <div class="row"><span>Thuul Syams</span><b>${thulsyamsi2}</b></div>
-    <div class="row"><span>Hissoh Saah</span><b>${hissohsaah}</b></div>
-    <div class="row"><span>Ta'dil Alamah</span><b>${tadilalamah2}</b></div>
-    <div class="row"><span>Alamah Muadalah JKT</span><b>${jkt3}</b></div>
-    <div class="row"><span>Thul Balad</span><b>${koorlong}</b></div>
-    <div class="row"><span>Selisih Waktu</span><b>${selisihwaktu2}</b></div>
-    <div class="row"><span>Alamah Muadalah Bibaladika</span><b>${bittatbieq2}</b></div>
-    <div class="row"><span>Yaqoul Ijtima</span><b>(${indexYaqoulijtima}) ${yaqoulijtima}</b></div>
-    <div class="row"><span>Sa'ah Ijtima Gurubiyah</span><b>${sig2}</b></div>
-    <div class="row"><span>Saah Ijtima Zawaliyah / (WIB)</span><b>${siz2}</b></div>
-    <div class="row"><span>Minal Ijtima Ilal-gurub</span><b>${mig2}</b></div>
-    <div class="row"><span>Irtipa Hilal Ba'dal-gurub</span><b>${irtipa2}</b></div>
-    <div class="row"><span>Mukstul Hilal Fauqol-ufq</span><b>${mukstulhilal2}</b></div>
-    <div class="row"><span>Kamyah Ardl-qomar</span><b>${kamyah}</b></div>
-    <div class="row"><span>Qous nuril-hilal</span><b>${nurilhilal2}</b></div>
-    
+    <div class="row"><span>Total Alamah</span><span>${hasilAkhirAlamah3}</span></div>
+    <div class="row"><span>Total Hissoh</span><span>${hasilAkhirHissoh3}</span></div>
+    <div class="row"><span>Total Wasath</span><span>${hasilAkhirWasat3}</span></div>
+    <div class="row"><span>Total Khosoh</span><span>${hasilAkhirKhosoh3}</span></div>
+    <div class="row"><span>Total Markaz</span><span>${hasilAkhirMarkaz3}</span></div>
+    <div class="row"><span>Ta'dil Khosoh</span><span>${tadilkhosoh}</span></div>
+    <div class="row"><span>Ta'dil Markaz</span><span>${tadilmarkaz}</span></div>
+    <div class="row"><span>Bu'du Goer Muadal</span><span>${buduGoerMuadal2}</span></div>
+    <div class="row"><span>Hasilu Dorob</span><span>${hasildorob2}</span></div>
+    <div class="row"><span>Ta'dil Wasath</span><span>${tadilwasat2}</span></div>
+    <div class="row"><span>Muqowam Syamsi</span><span>${muqowwamsyamsi2}</span></div>
+    <div class="row"><span>Yaqoul Ijtima Pii burj</span><span>(${mq1}) ${mq2}</span></div>
+    <div class="row"><span>Hai'atul Hilal</span><span>${mq3}</span></div>
+    <div class="row"><span>Ta'dil Ayyam</span><span>${tadilayyam}</span></div>
+    <div class="row"><span>Bu'du Muadal</span><span>${budumuadal2}</span></div>
+    <div class="row"><span>Thuul Syams</span><span>${thulsyamsi2}</span></div>
+    <div class="row"><span>Hissoh Saah</span><span>${hissohsaah}</span></div>
+    <div class="row"><span>Ta'dil Alamah</span><span>${tadilalamah2}</span></div>
+    <div class="row"><span>Alamah Muadalah JKT</span><span>${jkt3}</span></div>
+    <div class="row"><span>Thul Balad</span><span>${koorlong}</span></div>
+    <div class="row"><span>Selisih Waktu</span><span>${selisihwaktu2}</span></div>
+    <div class="row"><span>Alamah Muadalah Bibaladika</span><span>${bittatbieq2}</span></div>
+    <div class="row"><span>Yaqoul Ijtima</span><span>(${indexYaqoulijtima}) ${yaqoulijtima}</span></div>
+    <div class="row"><span>Sa'ah Ijtima Gurubiyah</span><span>${sig2}</span></div>
+    <div class="row"><span>Saah Ijtima Zawaliyah / (WIB)</span><span>${siz2}</span></div>
+    <div class="row"><span>Minal Ijtima Ilal-gurub</span><span>${mig2}</span></div>
+    <div class="row"><span>Irtipa Hilal Ba'dal-gurub</span><span>${irtipa2}</span></div>
+    <div class="row"><span>Mukstul Hilal Fauqol-ufq</span><span>${mukstulhilal2}</span></div>
+    <div class="row"><span>Kamyah Ardl-qomar</span><span>${kamyah}</span></div>
+    <div class="row"><span>Qous nuril-hilal</span><span>${nurilhilal2}</span></div>
+<div class="ringkasan"><b>* RINGKASAN *</b></div>
     <div class="poinHasilHisab">
-    <div class=""><span>Awal Bulan: </span><b>${bulanYangDimaksud} ${tahunYangDimaksud} H</b></div>
-    <div class=""><span>Jatuh Pada Hari: </span><b>${jatuhhari} ${pasar}, ${hasilTgl} ${b_masehi_nama} ${thM} </b></div>
-    <div class=""><span>Ijtima Terjadi Pada ${tjdIjt}:</span><b> ${yaqoulijtima}, ${thM}</b></div>
-    <div class=""><span>Jam Ijtima  </span><b>${jmsiz2}:${jmsiz4} WIB | ${jmsig2}:${jmsig4} WGB </b></div>
-    <div class=""><span>Ketinggian Hilal </span><b>{Malam ${yaqoulijtima2}} ${jmipa2}°${jmipa4}'</b></div>
-    <div class=""><span>Patokan Imkan </span><b>${ptkimkan} | [${ikngoerikn}]</b></div>
-    <div class=""><span>Lama Hilal diatas Ufuk ${jmmks2}:${jmmks4}</span><b></b></div>
-    <div class=""><span>Condongnya Hilal Miring ke ${mq3}</span><b></b></div>
-    <div class=""><span>Cahaya Hilal ${qnh2}°${qnh4}</span><b></b></div>
+    <div class="row"><span>Awal Bulan </span><span>${bulanYangDimaksud} ${tahunYangDimaksud} H</span></div>
+    <div class="row"><span>Jatuh Pada Hari </span><span>${jatuhhari} ${pasar}, ${hasilTgl} ${b_masehi_nama} ${thM} </span></div>
+    <div class="row"><span>Ijtima Terjadi Pada ${tjdIjt}:</span><span> ${yaqoulijtima}, ${thM}</span></div>
+    <div class="row"><span>Jam Ijtima  </span><span>${jmsiz2}:${jmsiz4} WIB | ${jmsig2}:${jmsig4} WGB </span></div>
+    <div class="row"><span>Ketinggian Hilal </span><span>{Malam ${yaqoulijtima2}} ${jmipa2}°${jmipa4}'</span></div>
+    <div class="row"><span>Patokan Imkan </span><span>${ptkimkan} | [${ikngoerikn}]</span></div>
+    <div class="row"><span>Lama Hilal diatas Ufuk </span><span>${jmmks2}:${jmmks4}</span></div>
+    <div class="row"><span>Condongnya Hilal Miring ke </span><span>${mq3}</span></div>
+    <div class="row"><span>Cahaya Hilal </span><span>${qnh2}°${qnh4}</span></div>
     </div>
     
 
-   <div class=""><b>TN: </b><span>Penangalan masehi memakai hisab urfi</span></div>
+   <div class="note"><small>* Penangalan masehi memakai hisab urfi</small></div>
    
    </div>
    
@@ -1498,14 +1496,15 @@ const btnCloseKalkulator  = document.getElementById('closeKalkulator');
    TAB & KONTEN KALKULATOR
 ================================ */
 const tabsK = document.querySelectorAll('.kalkulator-tabs .tab');
-const inputWaris  = document.getElementById('inputWaris');
-const contentsK = [inputWaris];
+const inputHariTahlil  = document.getElementById('inputHariTahlil');
+const contentsK = [inputHariTahlil];
 /* ===============================
-   PANEL HASIL KALKULATOR > WARIS
+   PANEL HASIL KALKULATOR > HARI TAHLIL
 ================================ */
-const panelHasilWaris = document.getElementById('panelHasilWaris');
-const btnProsesWaris  = document.getElementById('btnHitungWaris');
-const btnBackWaris = document.getElementById('btnBackWaris');
+const panelHasilHariTahlil = document.getElementById('panelHasilHariTahlil');
+const btnHitungTahlilH  = document.getElementById('btnHitungTahlilH');
+const btnBackHariTahlil = document.getElementById('btnBackHariTahlil');
+const hasilHariTahlil = document.getElementById('hasilHariTahlil');
 
 /* ===============================
    OPEN PANEL HISAB
@@ -1520,10 +1519,10 @@ if (btnMenuKalkulator) {
     tabsK[0].classList.add('active');
 
     contentsK.forEach(c => c.classList.add('hidden'));
-    inputWaris.classList.remove('hidden');
+    inputHariTahlil.classList.remove('hidden');
 
     // pastikan panel hasil tertutup
-    if (panelHasilWaris) panelHasilWaris.classList.add('hidden');
+    if (panelHasilHariTahlil) panelHasilHariTahlil.classList.add('hidden');
   };
 }
 /* ===============================
@@ -1532,7 +1531,7 @@ if (btnMenuKalkulator) {
 function closeKalkulatorPanel(){
   overlayKalkulator.classList.add('hidden');
   panelKalkulator.classList.add('hidden');
-  if (panelHasilWaris) panelHasilWaris.classList.add('hidden');
+  if (panelHasilHariTahlil) panelHasilHariTahlil.classList.add('hidden');
 }
 
 overlayKalkulator.onclick  = closeKalkulatorPanel;
@@ -1551,5 +1550,118 @@ tabsK.forEach((tab, index) => {
   };
 });
 
+if (btnHitungTahlilH) {
+  btnHitungTahlilH.onclick = () => {
+
+    inputHariTahlil.classList.add("hidden");
+    panelHasilHariTahlil.classList.remove("hidden");
+
+    // ambil nilai input
+    const tglWafat = parseInt(document.getElementById("tglWafat").value);
+    const blnWafat = parseInt(document.getElementById("blnWafat").value);
+    const thnWafat = parseInt(document.getElementById("thnWafat").value);
+
+    const namaBulanH = [
+      "", "Muharram","Shafar","Rabiul Awal","Rabiul Akhir",
+      "Jumadil Awal","Jumadil Akhir","Rajab","Sya'ban",
+      "Ramadhan","Syawal","Dzulqa'dah","Dzulhijjah"
+    ];
+
+    function hariBulanH(bulan) {
+      return bulan % 2 === 1 ? 30 : 29; // urfi
+    }
+
+    function tambahHariH(t, b, y, n) {
+      while (n > 0) {
+        let sisa = hariBulanH(b) - t;
+        if (n <= sisa) {
+          t += n;
+          n = 0;
+        } else {
+          n -= (sisa + 1);
+          t = 1;
+          b++;
+          if (b > 12) {
+            b = 1;
+            y++;
+          }
+        }
+      }
+      return { t, b, y };
+    }
+
+    const agenda = [
+      { nama: "1 Hari", h: 0 },
+      { nama: "3 Hari", h: 2 },
+      { nama: "7 Hari", h: 6 },
+      { nama: "40 Hari", h: 39 },
+      { nama: "100 Hari", h: 99 },
+      { nama: "Haul (1 Tahun)", y: 1 }
+    ];
+let html = `
+  <div class="card">
+    <h3 style="margin-bottom:10px">Hasil Hari Tahlil (Hijriyah)</h3>
+    <table class="tahlil-table">
+      <thead>
+        <tr>
+          <th>Amalan</th>
+          <th>Tanggal Hijriyah</th>
+        </tr>
+      </thead>
+      <tbody>
+`;
+
+agenda.forEach(a => {
+  let r;
+  if (a.y) {
+    r = { t: tglWafat, b: blnWafat, y: thnWafat + a.y };
+  } else {
+    r = tambahHariH(tglWafat, blnWafat, thnWafat, a.h);
+  }
+
+  html += `
+    <tr>
+      <td><span>${a.nama}</span></td>
+      <td>${r.t} ${namaBulanH[r.b]} ${r.y} H</td>
+    </tr>
+  `;
+});
+
+html += `
+      </tbody>
+    </table>
+    <div class="note">
+      <small>* Perhitungan berdasarkan Hijriyah (hisab urfi)</small>
+    </div>
+  </div>
+`;
+
+hasilHariTahlil.innerHTML = html;
+    
+  };
+}
 
 
+/* ===============================
+   KEMBALI KE HISAB IJTIMA
+================================ */
+if (btnBackHariTahlil) {
+  btnBackHariTahlil.onclick = () => {
+    panelHasilHariTahlil.classList.add('hidden');
+    panelKalkulator.classList.remove('hidden');
+
+    // pastikan kembali ke tab Ijtima
+    tabsK.forEach(t => t.classList.remove('active'));
+    tabsK[0].classList.add('active');
+
+    contentsK.forEach(c => c.classList.add('hidden'));
+    inputHariTahlil.classList.remove('hidden');
+  };
+}
+
+if (btnBackHariTahlil) {
+  btnBackHariTahlil.onclick = () => {
+    inputHariTahlil.classList.remove("hidden");
+    panelHasilHariTahlil.classList.add("hidden");
+  };
+}

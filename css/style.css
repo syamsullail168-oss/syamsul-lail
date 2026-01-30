@@ -916,7 +916,6 @@ body.light .day-name {
 
 
 .poinHasilHisab {
-  margin-top: 50px;
   margin-bottom:20px;
 }
 
@@ -1046,4 +1045,31 @@ h4 {
 .kalkulator-tabs .tab.active {
   color: #ff3d7f;
   border-bottom: 2px solid #ff3d7f;
+}
+
+.tahlil-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.tahlil-table th,
+.tahlil-table td {
+  padding: 8px 6px;
+  border-bottom: 1px solid #ddd;
+}
+
+.tahlil-table th {
+  text-align: left;
+}
+
+.note {
+  margin-top: 8px;
+  color: #666;
+}
+
+.ringkasan{
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 10px;
 }
