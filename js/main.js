@@ -1497,7 +1497,8 @@ const btnCloseKalkulator  = document.getElementById('closeKalkulator');
 ================================ */
 const tabsK = document.querySelectorAll('.kalkulator-tabs .tab');
 const inputHariTahlil  = document.getElementById('inputHariTahlil');
-const contentsK = [inputHariTahlil];
+const inputHariLahir  = document.getElementById('inputHariLahir');
+const contentsK = [inputHariTahlil, inputHariLahir];
 /* ===============================
    PANEL HASIL KALKULATOR > HARI TAHLIL
 ================================ */
@@ -1507,7 +1508,7 @@ const btnBackHariTahlil = document.getElementById('btnBackHariTahlil');
 const hasilHariTahlil = document.getElementById('hasilHariTahlil');
 
 /* ===============================
-   OPEN PANEL HISAB
+   OPEN PANEL KALKULATOR
 ================================ */
 if (btnMenuKalkulator) {
   btnMenuKalkulator.onclick = () => {
@@ -1641,27 +1642,47 @@ hasilHariTahlil.innerHTML = html;
   };
 }
 
-
-/* ===============================
-   KEMBALI KE HISAB IJTIMA
-================================ */
-if (btnBackHariTahlil) {
-  btnBackHariTahlil.onclick = () => {
-    panelHasilHariTahlil.classList.add('hidden');
-    panelKalkulator.classList.remove('hidden');
-
-    // pastikan kembali ke tab Ijtima
-    tabsK.forEach(t => t.classList.remove('active'));
-    tabsK[0].classList.add('active');
-
-    contentsK.forEach(c => c.classList.add('hidden'));
-    inputHariTahlil.classList.remove('hidden');
-  };
-}
-
 if (btnBackHariTahlil) {
   btnBackHariTahlil.onclick = () => {
     inputHariTahlil.classList.remove("hidden");
     panelHasilHariTahlil.classList.add("hidden");
   };
+}
+
+const btnHitungHari = document.getElementById('calculateDays')
+if (btnHitungHari) {
+  btnHitungHari.onclick = () => { 
+    
+    const birthdate = document.getElementById('birthdate').value;
+      const resultDays = document.getElementById('resultDays');
+      const resultYearsMonthsDays = document.getElementById('resultYearsMonthsDays');
+      if (birthdate) {
+        const birthDateObj = new Date(birthdate);
+        const currentDate = new Date();
+        const timeDifference = currentDate - birthDateObj;
+        const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+        resultDays.value = daysDifference;
+
+        // Calculate years, months, and days
+        let years = currentDate.getFullYear() - birthDateObj.getFullYear();
+        let monthsL = currentDate.getMonth() - birthDateObj.getMonth();
+        let daysL = currentDate.getDate() - birthDateObj.getDate();
+
+        if (daysL < 0) {
+          monthsL--;
+          daysL += new Date(currentDate.getFullYear(), currentDate.getMonth(), 0).getDate();
+        }
+
+        if (monthsL < 0) {
+          years--;
+          monthsL += 12;
+        }
+
+        resultYearsMonthsDays.value = `${years} Tahun, ${monthsL} Bulan, ${daysL} Hari`;
+      } else {
+        resultDays.value = 'Please enter a valid date';
+        resultYearsMonthsDays.value = '';
+      }
+    
+  }
 }

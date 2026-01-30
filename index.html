@@ -222,7 +222,7 @@
        <button class="tab active">HARI TAHLIL</button>
        <button class="tab">HARI LAHIR</button>
   </div>
-  <div class="hisab-content" id="inputHariTahlil">
+  <div class="hisab-content hidden" id="inputHariTahlil">
     <div class="field">
       <label>Tanggal</label>
       <input type="number" id="tglWafat" min="1" max="30" value="1">
@@ -254,10 +254,46 @@
       PROSES
     </button>
   </div>
+  
+  <div class="hisab-content hidden" id="inputHariLahir">
+    <div class="field">
+      <label>Tanggal</label>
+      <input type="date" id="birthdate" required>
+    </div>
+
+    <div class="field">
+      <label>Jumlah hari keseluruhan</label>
+      <input type="text" id="resultDays" name="resultDays" placeholder="Hasil langsung disini" readonly>
+  </div>
+
+    <div class="field">
+      <label>Jumlah tahun/bulan/hari</label>
+      <input type="text" id="resultYearsMonthsDays" name="resultYearsMonthsDays" placeholder="Hasil langsung disini" readonly>
+    </div>
+  <button class="btn-process" id="calculateDays">
+      PROSEShari
+    </button>
+  </div>
 
 </div>
 
 <!-- PANEL HASIL -->
+<div id="panelHasilHariLahir" class="hisab-panel hidden">
+
+  <div class="hisab-header">
+    <button id="btnBackHariLahir" class="back-btn">
+      <i class="bi bi-arrow-left"></i>
+    </button>
+    <h3>Hasil Hari Lahir</h3>
+  </div>
+
+  <div class="card hisab-content">
+    <div class="hasil-row" id="hasilHariLahir">
+    </div>
+  </div>
+
+</div>
+
 <div id="panelHasilHariTahlil" class="hisab-panel hidden">
 
   <div class="hisab-header">

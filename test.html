@@ -1,172 +1,72 @@
-<!-- SAUDARA KANDUNG -->
-<h4>Saudara Kandung</h4>
-
-<div class="waris-row">
-  <input type="checkbox">
-  <span class="nama">Saudara Laki-laki Kandung</span>
-  <button>-</button>
-  <span class="jumlah">0</span>
-  <button>+</button>
-</div>
-
-<div class="waris-row">
-  <input type="checkbox">
-  <span class="nama">Saudara Perempuan Kandung</span>
-  <button>-</button>
-  <span class="jumlah">0</span>
-  <button>+</button>
-</div>
-
-<hr>
-
-<!-- SAUDARA SEAYAH -->
-<h4>Saudara Seayah</h4>
-
-<div class="waris-row">
-  <input type="checkbox">
-  <span class="nama">Saudara Laki-laki Seayah</span>
-  <button>-</button>
-  <span class="jumlah">0</span>
-  <button>+</button>
-</div>
-
-<div class="waris-row">
-  <input type="checkbox">
-  <span class="nama">Saudara Perempuan Seayah</span>
-  <button>-</button>
-  <span class="jumlah">0</span>
-  <button>+</button>
-</div>
-
-<hr>
-<!-- SAUDARA SEIBU -->
-<h4>Saudara Seibu</h4>
-
-<div class="waris-row">
-  <input type="checkbox">
-  <span class="nama">Saudara Laki-laki Seibu</span>
-  <button>-</button>
-  <span class="jumlah">0</span>
-  <button>+</button>
-</div>
-
-<div class="waris-row">
-  <input type="checkbox">
-  <span class="nama">Saudara Perempuan Seibu</span>
-  <button>-</button>
-  <span class="jumlah">0</span>
-  <button>+</button>
-</div>
-
-<hr>
-
-<!-- KEPONAKAN -->
-<h4>Kemenakan</h4>
-
-<div class="waris-row">
-  <input type="checkbox">
-  <span class="nama">Anak Laki-laki Saudara Kandung</span>
-  <button>-</button>
-  <span class="jumlah">0</span>
-  <button>+</button>
-</div>
-
-<div class="waris-row">
-  <input type="checkbox">
-  <span class="nama">Anak Laki-laki Saudara Seayah</span>
-  <button>-</button>
-  <span class="jumlah">0</span>
-  <button>+</button>
-</div>
-
-<hr>
-
-<!-- PAMAN -->
-<h4>Paman</h4>
-
-<div class="waris-row">
-  <input type="checkbox">
-  <span class="nama">Paman Kandung</span>
-  <button>-</button>
-  <span class="jumlah">0</span>
-  <button>+</button>
-</div>
-
-<div class="waris-row">
-  <input type="checkbox">
-  <span class="nama">Paman Seayah</span>
-  <button>-</button>
-  <span class="jumlah">0</span>
-  <button>+</button>
-</div>
-
-<hr>
-
-<!-- SEPUPU -->
-<h4>Sepupu</h4>
-
-<div class="waris-row">
-  <input type="checkbox">
-  <span class="nama">Anak Laki-laki Paman Kandung</span>
-  <button>-</button>
-  <span class="jumlah">0</span>
-  <button>+</button>
-</div>
-
-<div class="waris-row">
-  <input type="checkbox">
-  <span class="nama">Anak Laki-laki Paman Seayah</span>
-  <button>-</button>
-  <span class="jumlah">0</span>
-  <button>+</button>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Hitung Hari</title>
+  <style>
     
+  </style>
+</head>
+<body>
+  <main>
+    <div class="container">
+      <h2>Hitung Hari dari Tanggal Lahir</h2>
+      <form id="">
+        <div class="form-group">
+          <label for="">Tanggal Lahir:</label>
+          <input type="date" id="birthdate" name="birthdate" required>
+        </div>
+        <div class="form-group">
+          <button type="button" onclick="calculateDays()">Hitung Hari</button>
+        </div>
+        <div class="form-group">
+          <label>Jumlah Hari:</label>
+          <input type="text" id="resultDays" name="resultDays" readonly>
+        </div>
+        <div class="form-group">
+          <label>Jumlah Tahun/Bulan/Hari:</label>
+          <input type="text" id="resultYearsMonthsDays" name="resultYearsMonthsDays" readonly>
+        </div>
+      </form>
+    </div>
+  </main>
+  <script>
+    function calculateDays() {
+      const birthdate = document.getElementById('birthdate').value;
+      const resultDays = document.getElementById('resultDays');
+      const resultYearsMonthsDays = document.getElementById('resultYearsMonthsDays');
+      if (birthdate) {
+        const birthDateObj = new Date(birthdate);
+        const currentDate = new Date();
+        const timeDifference = currentDate - birthDateObj;
+        const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+        resultDays.value = daysDifference;
 
-<!-- KAKEK & NENEK -->
-<h4>Kakek & Nenek</h4>
+        // Calculate years, months, and days
+        let years = currentDate.getFullYear() - birthDateObj.getFullYear();
+        let monthsL = currentDate.getMonth() - birthDateObj.getMonth();
+        let daysL = currentDate.getDate() - birthDateObj.getDate();
 
-<div class="waris-row">
-  <input type="checkbox">
-  <span class="nama">Kakek (Ayah dari Ayah)</span>
-  <button>-</button>
-  <span class="jumlah">0</span>
-  <button>+</button>
-</div>
+        if (daysL < 0) {
+          monthsL--;
+          daysL += new Date(currentDate.getFullYear(), currentDate.getMonth(), 0).getDate();
+        }
 
-<div class="waris-row">
-  <input type="checkbox">
-  <span class="nama">Nenek dari Ibu</span>
-  <button>-</button>
-  <span class="jumlah">0</span>
-  <button>+</button>
-</div>
+        if (monthsL < 0) {
+          years--;
+          monthsL += 12;
+        }
 
-<div class="waris-row">
-  <input type="checkbox">
-  <span class="nama">Nenek dari Ayah</span>
-  <button>-</button>
-  <span class="jumlah">0</span>
-  <button>+</button>
-</div>
-<hr>
-
-<!-- CUCU DARI ANAK LAKI -->
-<h4>Cucu (dari Anak Laki-laki)</h4>
-
-<div class="waris-row">
-  <input type="checkbox">
-  <span class="nama">Cucu Laki-laki</span>
-  <button>-</button>
-  <span class="jumlah">0</span>
-  <button>+</button>
-</div>
-
-<div class="waris-row">
-  <input type="checkbox">
-  <span class="nama">Cucu Perempuan</span>
-  <button>-</button>
-  <span class="jumlah">0</span>
-  <button>+</button>
-</div>
-
-<hr>
+        resultYearsMonthsDays.value = `${years} Tahun, ${monthsL} Bulan, ${daysL} Hari`;
+      } else {
+        resultDays.value = 'Please enter a valid date';
+        resultYearsMonthsDays.value = '';
+      }
+    }
+  </script>
+</body>
+</html>
+  
+  
