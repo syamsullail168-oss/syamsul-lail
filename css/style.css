@@ -101,7 +101,6 @@ body{
   display:grid;
   grid-template-columns:repeat(7,1fr);
   gap:6px;
-  animation: slideUp .7200s ease;
 }
 
 /* Nama hari */
@@ -814,7 +813,6 @@ body.light .day-name {
 }
 .hisab-content {
   padding: 14px 16px;
-  animation: slideUp .7200s ease;
 }
 
 .field {

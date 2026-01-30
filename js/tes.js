@@ -3,16 +3,12 @@
   ============================== */
 
 function hitungWaris() {
-
-  /* =====================
-     AMBIL HARTA
-     ===================== */
   const inputHarta = document.querySelector('.input-group input[type="number"]');
   const harta = Number(inputHarta.value || 0);
 
   if (harta <= 0) {
     alert("Harta belum diisi");
-    return; // ⛔ STOP TOTAL
+    return; 
   }
 
   /* =====================
@@ -33,15 +29,15 @@ function hitungWaris() {
     }
   });
 
-  // ❌ TIDAK ADA AHLI WARIS
   if (Object.keys(ahli).length === 0) {
     alert("Pilih minimal satu ahli waris");
-    return; // ⛔ STOP
+    return; 
   }
 
-  /* =====================
-     HITUNGAN DASAR
-     ===================== */let sisa = harta;
+/* =====================
+   HITUNGAN DASAR
+   ===================== */
+let sisa = harta;
 const hasil = [];
 
 const adaAnak = ahli["Anak Laki-laki"] || ahli["Anak Perempuan"];
