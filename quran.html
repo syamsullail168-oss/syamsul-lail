@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>القرآن الكريم - مصحف إلكتروني</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/quran.css">
+</head>
+<body>
+  <header>
+        <div class="containerQ header-content">
+            <div class="logo">
+                <i class="fas fa-mosque"></i>
+                <div class="logo-text">
+                    <h1>القرآن الكريم</h1>
+                    <p>مصحف إلكتروني بتلاوة عربية</p>
+                </div>
+            </div>
+            <div class="header-controls">
+                <div class="search-container">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="ابحث عن سورة بالاسم أو الرقم...">
+                </div>
+                <button class="back-to-list" id="backToList">
+                    <i class="fas fa-list"></i> العودة للقائمة
+                </button>
+                <button class="theme-toggle" id="themeToggle" title="تبديل المظهر">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="containerQ main-content">
+        <!-- Surah List View -->
+        <div class="surah-list-container active" id="surahListView">
+            <div class="surah-list-header">
+                <h2>📖 سور القرآن الكريم</h2>
+                <p>اختر سورة للقراءة - ١١٤ سورة</p>
+            </div>
+            <ul class="surah-list" id="surahList">
+                <div class="loading">
+                    <i class="fas fa-book-quran"></i>
+                    <p>جاري تحميل قائمة السور...</p>
+                </div>
+            </ul>
+        </div>
+
+        <!-- Quran Display View -->
+        <div class="quran-display-container" id="quranDisplayView">
+            <div class="surah-header">
+                <div class="surah-title-container">
+                    <h1 class="surah-title" id="surahTitle">الفاتحة</h1>
+                    <div class="surah-subtitle" id="surahSubtitle">
+                        <span><i class="fas fa-hashtag"></i> السورة ١</span>
+                        <span><i class="fas fa-ayat"></i> ٧ آيات</span>
+                        <span><i class="fas fa-map-marker-alt"></i> مكية</span>
+                    </div>
+                </div>
+                <div class="surah-navigation">
+                    <button class="nav-btn" id="prevSurah">
+                        <i class="fas fa-chevron-right"></i> السابقة
+                    </button>
+                    <button class="nav-btn" id="nextSurah">
+                        التالية <i class="fas fa-chevron-left"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="bismillah" id="bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+            <div class="verses-container" id="versesContainer">
+                <div class="loading">
+                    <i class="fas fa-book-open"></i>
+                    <p>جاري تحميل آيات السورة...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="containerQ">
+            <p>
+                القرآن الكريم - مصحف إلكتروني بخط <strong>الرسم العثماني</strong> •
+                API من <a href="https://alquran.cloud" target="_blank">AlQuran Cloud</a> •
+                بيانات من <a href="https://tanzil.net" target="_blank">Tanzil Project</a>
+            </p>
+            <p style="margin-top: 10px;">
+                © ١٤٤٥ هـ - لله الحمد والمنة
+            </p>
+        </div>
+    </footer>
+  <script src="../js/quran.js"></script>
+</body>
+</html>
+         

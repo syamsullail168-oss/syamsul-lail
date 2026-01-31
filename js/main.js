@@ -1594,7 +1594,6 @@ if (btnHitungTahlilH) {
     ];
 let html = `
   <div class="card">
-    <h3 style="margin-bottom:10px">Hasil Hari Tahlil (Hijriyah)</h3>
     <table class="tahlil-table">
       <thead>
         <tr>
