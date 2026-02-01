@@ -502,11 +502,11 @@ function applyTheme(mode) {
   if (mode === "light") {
     document.body.classList.add("light");
     themeDesc.textContent = "Terang";
-    themeValue.textContent = "Terang";
+    themeValue.className = "bi bi-sun";
   } else {
     document.body.classList.remove("light");
     themeDesc.textContent = "Gelap";
-    themeValue.textContent = "Gelap";
+    themeValue.className = "bi bi-moon";
   }
   localStorage.setItem("theme", mode);
 }
