@@ -1652,7 +1652,7 @@ if (btnHitungHari) {
         const birthDateObj = new Date(birthdate);
         const currentDate = new Date();
         const timeDifference = currentDate - birthDateObj;
-        const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+        const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24)+1);
         resultDays.value = daysDifference;
 
         // Calculate years, months, and days
