@@ -1,39 +1,24 @@
-const CACHE_NAME = "f169-cache-v1";
+const CACHE_NAME = "syamsullail-cache-v1";
 const ASSETS_TO_CACHE = [
   '/',
-  '/index.html',
-  '/styles/navbar.css',
-  '/styles/article-taweiem.css',
-  '/styles/style-footer.css',
-  '/styles/hasil.css',
-  '/asset/icons/icon-192x192.png',
-  '/assets/icons/icon-512x512.png',
-  '/assets/icons/icon-92x92.png',
-  '/hitung-hisab/paroid.html',
-  '/hitung-hisab/perhitungan-tahun-hijriyah.html',
-  '/hitung-hisab/perhitungan-tahun-masehi.html',
-  '/hitung-hisab/taqweem.html',
-  '/hitung-hisab/waktu-shalat.html',
-  '/main/jadwal-sholat.js',
-  '/main/navbar.js',
-  '/main/scrolltop.js',
-  '/penjelasan-hisab/pendahuluan.html',
-  '/penjelasan-hisab/taqwiem-bab1.html',
-  '/penjelasan-hisab/taqwiem-bab2.html',
-  '/penjelasan-hisab/taqwiem-bab3.html',
-  '/penjelasan-hisab/taqwiem-bab4.html',
-  '/penjelasan-hisab/hisab-istilahi/awal-tahun-hijriyah.html',
-  '/penjelasan-hisab/hisab-istilahi/awal-tahun-masehi.html',
-  '/penjelasan-hisab/hisab-istilahi/khulasoh-hisab-istilahi.html',
-  '/penjelasan-hisab/hisab-istilahi/khulasoh2.html',
-  '/penjelasan-hisab/hisab-istilahi/khulasoh3.html',
-  '/service-worker.js',
-  '/manifest.json',
-  '/pembarusan.html',
-  '/footer/contact.html',
-  '/footer/disclaimer.html',
-  '/footer/tentang.html',
-  '/footer/visimisi.html',
+  'index.html',
+  'informasi.html',
+  'quran.html',
+  'index.html',
+  'css/style.css',
+  'css/main.css',
+  'css/quran.css',
+  'css/informasi.css',
+  'asset/icons/icon-192x192.png',
+  'assets/icons/icon-512x512.png',
+  'assets/icons/icon-92x92.png',
+  'js/main.js'
+  'js/quran.js'
+  'js/main.js'
+  'app.js',
+  'service-worker.js',
+  'manifest.json'
+
 ];
 
 // Install Service Worker
