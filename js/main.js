@@ -1519,7 +1519,6 @@ const bulanHijriyah = ["Dzul Hijjah", "Muharom", "Sopar", "Robiul Awal", "Robius
    document.getElementById('hasilHisabAkhirBulan').innerHTML = `
    
    <div class="card sholat-list">
-    <div class="row"><span>hasilTgl</span><span>${hasilTgl} ${b_masehi} ${thnm}</span></div>
     <div class="row"><span>Total Alamah</span><span>${hasilAkhirAlamah3}</span></div>
     <div class="row"><span>Total Hissoh</span><span>${hasilAkhirHissoh3}</span></div>
     <div class="row"><span>Total Wasath</span><span>${hasilAkhirWasat3}</span></div>
@@ -1541,7 +1540,7 @@ const bulanHijriyah = ["Dzul Hijjah", "Muharom", "Sopar", "Robiul Awal", "Robius
     <div class="row"><span>Alamah Muadalah JKT</span><span>${jkt3}</span></div>
     <div class="row"><span>Thul Balad - Longitude</span><span>${koorlong}</span></div>
     <div class="row"><span>Selisih Waktu</span><span>${selisihwaktu2}</span></div>
-    <div class="row"><span>Alamah Muadalah Bibaladika</span><span>${bittatbieq2}</span></div>
+    <div class="row"><span>Alamah Muadalah Bibaladika +1</span><span>${bittatbieq2}</span></div>
     <div class="row"><span>Yaqoul Ijtima</span><span>(${indexYaqoulijtima}) ${yaqoulijtima}</span></div>
     <div class="row"><span>Arudh Balad - Latitude</span><span>${koorlat}</span></div> 
     <div class="row"><span>Zawal ~ pi-yaumil-ijtima</span><span>${dzuhur}</span></div>
