@@ -141,7 +141,8 @@ const pasaran   = ['Legi','Pahing','Pon','Wage','Kliwon'];
 // HITUNG BERAPA HARI SETIAP BULANNYA DARI HASIL HISAB SULAMUN NAYIREIN
 const hijriMonthLengths = {
   1446:[30,29,30,29,30,29,30,29,30,29,29,29],
-  1447:[30,29,30,29,30,30,30,30,29,29,30,30]
+  1447:[30,29,30,29,30,30,30,30,29,29,30,29],
+  1448:[30,29,29,30,30,29,30,30,30,29,30,29],
 };
 
 const hijriAnchor = {
@@ -646,9 +647,6 @@ if (btnProsesWaktuSholat) {
   btnProsesWaktuSholat.onclick = () => {
     panelInputSholat.classList.add("hidden");
     panelHasilHisabSholat.classList.remove("hidden");
-    
-    
-    
 
     // =====================
     // INPUT DATA
@@ -658,8 +656,8 @@ if (btnProsesWaktuSholat) {
     const tanggal = parseInt(document.getElementById('inputTanggal').value) || 18;
     const zonaWaktu = 7;
     
-    const φ = -6.786;
-    const λ = 107.173;
+    const φ = lokasi.lat;
+    const λ = lokasi.lon;
     
     const φKaaba = 21.4225;
     const λKaaba = 39.8262;
@@ -962,6 +960,7 @@ if (btnBackToHitungSholat) {
 if (btnProsesHisab) {
   btnProsesHisab.onclick = () => {
   const koorlong = lokasi.lon;
+  const koorlat = lokasi.lat;
   
 let tahunmajmuah = document.querySelector("#tahunmajmuah").value; let totaltahunmajmuah =  parseFloat(tahunmajmuah); 
 
@@ -1203,14 +1202,228 @@ let hissohsaah = lookupHissohsaah.find(range => hasilAkhirKhosoh3 >= range.min).
   let bittatbieq2 = bittatbieq.toFixed(3);
   let ij = bittatbieq / 24; 
   let ijt = Math.trunc(ij);
-  console.log(ijt);
+  
   const days = ["Sabtu", "Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jum'at"];
   let indexYaqoulijtima = Math.floor(ijt) % 7;
 let yaqoulijtima = days[indexYaqoulijtima];
 let yaqoulijtima2 = days[(indexYaqoulijtima + 1) % 7];
-let sig = bittatbieq % 24; let sig2 = sig.toFixed(3)
-let siz = sig <= 6 ? sig + 18 : (sig <= 18 ? sig - 6 : (sig - 18 <= 1 ? sig - 18 + 12 : sig - 6)); let siz2 = siz.toFixed(3);
-let mig = 24 - sig2; let mig2 = mig.toFixed(3); let irtipa = mig / 2; let irtipa2 = irtipa.toFixed(3);
+
+// Jam 6 dan Jam 12 di koreksi waktu maghri dan zawal
+// Hitung Waktu Magrib dan zawal
+
+// KONVERSEI TANGGAL HIJRI -> MASEHI
+
+const tgl = 1;
+const bln = totalbulan;
+const thn = tahunYangDimaksud;
+
+let tth = thn - 1;
+    let daor = Math.trunc(tth / 30);
+    let st = tth % 30;
+    let jth = daor * 10631;
+    let thst = st * 354;
+
+let ak;
+    if (st <= 4) ak = 1;
+    else if (st <= 6) ak = 2;
+    else if (st <= 9) ak = 3;
+    else if (st <= 12) ak = 4;
+    else if (st <= 15) ak = 5;
+    else if (st <= 17) ak = 6;
+    else if (st <= 20) ak = 7;
+    else if (st <= 23) ak = 8;
+    else if (st <= 25) ak = 9;
+    else if (st <= 29) ak = 10;
+    
+    const jhdsMap = { 
+        1: 0, 2: 30, 3: 59, 4: 89, 5: 118, 
+        6: 148, 7: 177, 8: 207, 9: 236, 
+        10: 266, 11: 295, 12: 325 
+    };
+    
+    let jhds = jhdsMap[bln];
+    let jhhk = jth + thst + ak + jhds + tgl;
+    let jhmk = 227014 + jhhk; 
+    // Lanjutan setelah jhmk
+let tkt_ttM = jhmk / 365.2425;
+let ttM = Math.trunc(tkt_ttM);
+let sttm = tkt_ttM - ttM;
+let jhp = Math.round(sttm * 365.2425) ;
+let thnm = ttM + 1;
+
+let b_masehi;
+let b_masehi_nama;
+if (jhp <= 31) { b_masehi = 1; b_masehi_nama = "Januari"; }
+else if (jhp <= 59) { b_masehi = 2; b_masehi_nama = "Februari"; }
+else if (jhp <= 90) { b_masehi = 3; b_masehi_nama = "Maret"; }
+else if (jhp <= 120) { b_masehi = 4; b_masehi_nama = "April"; }
+else if (jhp <= 151) { b_masehi = 5; b_masehi_nama = "Mei"; }
+else if (jhp <= 181) { b_masehi = 6; b_masehi_nama = "Juni"; }
+else if (jhp <= 212) { b_masehi = 7; b_masehi_nama = "Juli"; }
+else if (jhp <= 243) { b_masehi = 8; b_masehi_nama = "Agustus"; }
+else if (jhp <= 273) { b_masehi = 9; b_masehi_nama = "September"; }
+else if (jhp <= 304) { b_masehi = 10; b_masehi_nama = "Oktober"; }
+else if (jhp <= 334) { b_masehi = 11; b_masehi_nama = "November"; }
+else { b_masehi = 12; b_masehi_nama = "Desember"; }
+
+let x_tglmm;
+switch(b_masehi) {
+    case 1: x_tglmm = 0; break;
+    case 2: x_tglmm = 31; break;
+    case 3: x_tglmm = 59; break;
+    case 4: x_tglmm = 90; break;
+    case 5: x_tglmm = 120; break;
+    case 6: x_tglmm = 151; break;
+    case 7: x_tglmm = 181; break;
+    case 8: x_tglmm = 212; break;
+    case 9: x_tglmm = 243; break;
+    case 10: x_tglmm = 273; break;
+    case 11: x_tglmm = 304; break;
+    case 12: x_tglmm = 334; break;
+    default: x_tglmm = 0;
+}
+let tglmm = Math.round(jhp - x_tglmm);
+let hasilTgl = tglmm === 0 ? 31 : tglmm;
+
+// KOREKSI TANGGAL & PASARAN MASEHI
+let tmM = tahunYangDimaksud;
+let bmM = totalbulan;
+const dataKonversi = {
+    1447: {
+        1: "20 Juli 2025",
+        2: "20 Agustus 2025",
+        3: "19 September 2025",
+        4: "20 Oktober 2025",
+        5: "18 November 2025",
+        7: "18 Desember 2025",
+        8: "Pahing, 20 Januari 2026",
+        9: "Pahing, 19 Februari 2026",
+        10: "Legi, 20 Maret 2026",
+        11: "Kliwon, 18 April 2026",
+        12: "Kliwon 18 Mei 2026"
+    },
+    1448: {
+        1: "Wage, 16 Juni 2026",
+        2: "Wage, 16 Juli 2026",
+        3: "Pon, 14 Agustus 2026",
+        4: "Pahing, 12 September 2026",
+        5: "Pahing, 12 Oktober 2026",
+        6: "Pahing, 11 November 2026",
+        7: "Legi, 10 Desember 2026",
+        8: "Legi, 9 Januari 2027",
+        9: "Legi, 8 Februari 2027",
+        10: "Legi, 10 Maret 2027",
+        11: "Kliwon, 8 April 2027",
+        12: "Kliwon 8 Mei 2027"
+    }
+};
+
+function getTanggalMasehi(tmM, bmM) {
+    if (dataKonversi[tmM] && dataKonversi[tmM][bmM]) {
+        return dataKonversi[tmM][bmM];
+    } else {
+        return "No data";
+    }
+}
+let hasilTanggalMasehi = getTanggalMasehi(tmM, bmM);
+
+    const zonaWaktu = 7;
+    const φ = lokasi.lat;
+    const λ = lokasi.lon;
+    
+    const d2r = d => d * Math.PI / 180;
+    const r2d = r => r * 180 / Math.PI;
+    
+    const toDMS = x => {
+      const sign = x < 0 ? '-' : '';
+      x = Math.abs(x);
+      const d = Math.floor(x);
+      const m = Math.floor((x - d) * 60);
+      const s = ((x - d - m/60) * 3600).toFixed(1);
+      return `${sign}${d}° ${m}′ ${s}″`;
+    };
+    
+    const toHMS = x => {
+      x = (x + 24) % 24;
+      const h = Math.floor(x);
+      const m = Math.floor((x - h) * 60);
+      const s = Math.round(((x - h) * 60 - m) * 60);
+      return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+    };
+    
+    function menitKeMS(x){
+    const sign = x < 0 ? '−' : '';
+    x = Math.abs(x);
+
+    const m = Math.floor(x);
+    const s = ((x - m) * 60).toFixed(1);
+
+    return `${sign}${m}′ ${s}″`;
+    }
+
+    let y = thnm;
+    let m = b_masehi;
+    if (m <= 2) { y--; m += 12; }
+    const A = Math.floor(y / 100);
+    const B = 2 - A + Math.floor(A / 4);
+    const JD = Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + hasilTgl + B - 1524.5;
+    
+    const T = (JD - 2451545) / 36525;
+    const L0 = (280.46646 + 36000.76983 * T) % 360;
+    const M = 357.52911 + 35999.05029 * T;
+    const C = (1.914602 - 0.004817 * T) * Math.sin(d2r(M)) + 0.019993 * Math.sin(d2r(2 * M));
+    const λ_matahari = L0 + C;
+    const ε = 23.439291 - 0.0130042 * T;
+    const δ = r2d(Math.asin(Math.sin(d2r(ε)) * Math.sin(d2r(λ_matahari))));
+    const E = 4 * r2d(Math.tan(d2r(ε/2))**2 * Math.sin(d2r(2*L0)) - 2 * 0.016708 * Math.sin(d2r(M)));
+    const zawal = 12 + zonaWaktu - (λ / 15) - (E / 60);
+    
+    const hitungBusur = (h) => {
+      const pembilang = Math.sin(d2r(h)) - Math.sin(d2r(φ)) * Math.sin(d2r(δ));
+      const penyebut = Math.cos(d2r(φ)) * Math.cos(d2r(δ));
+      const arg = pembilang / penyebut;
+      
+      if (arg <= -1) return 12;
+      if (arg >= 1) return 0;
+      
+      return r2d(Math.acos(arg)) / 15;
+    };
+    
+    const tMaghrib = hitungBusur(-0.833);
+    const tIsya = hitungBusur(-18);
+    const tSubuh = hitungBusur(-20);
+    const tTerbit = hitungBusur(-0.833);
+    const tDhuha = hitungBusur(4.5);
+    
+    const z = Math.tan(d2r(Math.abs(φ - δ)));
+    const hAshar = r2d(Math.atan(1 / (1 + z)));
+    const tAshar = hitungBusur(hAshar);
+
+    const terbit = zawal - tTerbit;
+    const dzh = zawal + (2/6);
+    const dzuhur = dzh.toFixed(3);
+    const mgb = zawal + tMaghrib + (2/60);
+    const maghrib = mgb.toFixed(3);
+    const sz = dzuhur - 12;
+    const sm = maghrib - 12;
+    
+let sig = bittatbieq % 24; let sig2 = sig.toFixed(3) 
+let siz;
+if (sig < sm) {
+    siz = sig + 6 + sz;
+} else if (sig < dzuhur) {
+    siz = sig + 6 + sz;
+} else if (sig < 18) {
+    siz = sig + 6 + sz;
+} else if (sig - 18 < 1) {
+    siz = (sig - 18) + 12 + sz ;
+} else {
+    siz = sig - 18;
+} 
+let siz2 = siz.toFixed(3);
+
+// Koreksi waktu maghrib dan zawal sampai sini
+let mig = 24 - sig; let mig2 = mig.toFixed(3); let irtipa = mig / 2; let irtipa2 = irtipa.toFixed(3);
 let mukstulhilal = irtipa * 0.0667; let mukstulhilal2 = mukstulhilal.toFixed(3);
 let hs = Math.round(hasilAkhirHissoh2); 
  
@@ -1300,109 +1513,13 @@ else if (drj <= 4) {ptkimkan = "7°";}
 let e = 1 + Math.trunc((tahunYangDimaksud * 11) / 30) + (tahunYangDimaksud * 354) + (totalbulan * 30) - Math.trunc((totalbulan - 1) / 2) - 384;let f = e + 227016;let g = Math.trunc(f / 1461);let thM = g * 4 + Math.trunc((f - g * 1461) / 365) + 1;let tjdIjt = sig <= 12 ? "Malam" : "Hari";let jmsiz = siz;let jmsiz2 = Math.trunc(jmsiz);let jmsiz3 = (jmsiz -jmsiz2) *60;let jmsiz4 = Math.trunc(jmsiz3);let jmsig = sig;let jmsig2 = Math.trunc(jmsig);let jmsig3 = (jmsig -jmsig2) *60;let jmsig4 = Math.trunc(jmsig3);let jmipa = irtipa;let jmipa2 = Math.trunc(jmipa);let jmipa3 = (jmipa -jmipa2) *60;let jmipa4 = Math.trunc(jmipa3);let jmmks = mukstulhilal;let jmmks2 = Math.trunc(jmmks);let jmmks3 = (jmmks -jmmks2) *60;let jmmks4 = Math.trunc(jmmks3);let qnh = nurilhilal;let qnh2 = Math.trunc(qnh);let qnh3 = (qnh -qnh2) *60;let qnh4 = Math.trunc(qnh3)
 const bulanHijriyah = ["Dzul Hijjah", "Muharom", "Sopar", "Robiul Awal", "Robius Stani","Jumadil Awal", "Jumadis Stani", "Rojab", "Syaban", "Rhomadhon","Syawal", "Dzulqodah"];let namebulan = bulanHijriyah[(totalbulan - 1 + 12) % 12];
 
-// KONVERSEI TANGGAL HIJRI -> MASEHI
 
-const tgl = 1;
-const bln = parseInt(document.getElementById('bulanhijriyah').value);
-const thnabc = parseInt(document.getElementById('tahunmajmuah').value);
-const thnxyz = parseInt(document.getElementById('tahunmabsutoh').value);
+// KOREKSI WAKTU MAGHBRIB DAN ZAWAL
 
-const thn = thnabc + thnxyz;
-
-let tth = thn - 1;
-    let daor = Math.trunc(tth / 30);
-    let st = tth % 30;
-    let jth = daor * 10631;
-    let thst = st * 354;
-
-let ak;
-    if (st <= 4) ak = 1;
-    else if (st <= 6) ak = 2;
-    else if (st <= 9) ak = 3;
-    else if (st <= 12) ak = 4;
-    else if (st <= 15) ak = 5;
-    else if (st <= 17) ak = 6;
-    else if (st <= 20) ak = 7;
-    else if (st <= 23) ak = 8;
-    else if (st <= 25) ak = 9;
-    else if (st <= 29) ak = 10;
-    
-    const jhdsMap = { 
-        1: 0, 2: 30, 3: 59, 4: 89, 5: 118, 
-        6: 148, 7: 177, 8: 207, 9: 236, 
-        10: 266, 11: 295, 12: 325 
-    };
-    
-    let jhds = jhdsMap[bln];
-    let jhhk = jth + thst + ak + jhds + tgl;
-    let jhmk = 227014 + jhhk; 
-    // Lanjutan setelah jhmk
-let tkt_ttM = jhmk / 365.2425;
-let ttM = Math.trunc(tkt_ttM);
-let sttm = tkt_ttM - ttM;
-let jhp = Math.round(sttm * 365.2425) ;
-let thnm = ttM + 1;
-
-let b_masehi;
-let b_masehi_nama;
-if (jhp <= 31) { b_masehi = 1; b_masehi_nama = "Januari"; }
-else if (jhp <= 59) { b_masehi = 2; b_masehi_nama = "Februari"; }
-else if (jhp <= 90) { b_masehi = 3; b_masehi_nama = "Maret"; }
-else if (jhp <= 120) { b_masehi = 4; b_masehi_nama = "April"; }
-else if (jhp <= 151) { b_masehi = 5; b_masehi_nama = "Mei"; }
-else if (jhp <= 181) { b_masehi = 6; b_masehi_nama = "Juni"; }
-else if (jhp <= 212) { b_masehi = 7; b_masehi_nama = "Juli"; }
-else if (jhp <= 243) { b_masehi = 8; b_masehi_nama = "Agustus"; }
-else if (jhp <= 273) { b_masehi = 9; b_masehi_nama = "September"; }
-else if (jhp <= 304) { b_masehi = 10; b_masehi_nama = "Oktober"; }
-else if (jhp <= 334) { b_masehi = 11; b_masehi_nama = "November"; }
-else { b_masehi = 12; b_masehi_nama = "Desember"; }
-
-let x_tglmm;
-switch(b_masehi) {
-    case 1: x_tglmm = 0; break;
-    case 2: x_tglmm = 31; break;
-    case 3: x_tglmm = 59; break;
-    case 4: x_tglmm = 90; break;
-    case 5: x_tglmm = 120; break;
-    case 6: x_tglmm = 151; break;
-    case 7: x_tglmm = 181; break;
-    case 8: x_tglmm = 212; break;
-    case 9: x_tglmm = 243; break;
-    case 10: x_tglmm = 273; break;
-    case 11: x_tglmm = 304; break;
-    case 12: x_tglmm = 334; break;
-    default: x_tglmm = 0;
-}
-let tglmm = Math.round(jhp - x_tglmm);
-
-let xh = jhhk % 7;
-let hariMM;
-switch(xh) {
-    case 0: hariMM = "Kamis"; break;
-    case 1: hariMM = "Jumat"; break;
-    case 2: hariMM = "Sabtu"; break;
-    case 3: hariMM = "Minggu"; break;
-    case 4: hariMM = "Senin"; break;
-    case 5: hariMM = "Selasa"; break;
-    case 6: hariMM = "Rabu"; break;
-    default: hariMM = "-";
-}
-
-let xp = jhhk % 5;
-let pasar;
-switch(xp) {
-    case 0: pasar = "Kliwon"; break;
-    case 1: pasar = "Legi"; break;
-    case 2: pasar = "Pahing"; break;
-    case 3: pasar = "Pon"; break;
-    case 4: pasar = "Wage"; break;
-    default: pasar = "-";
-}
-let hasilTgl = tglmm === 0 ? 31 : tglmm;
    document.getElementById('hasilHisabAkhirBulan').innerHTML = `
    
    <div class="card sholat-list">
+    <div class="row"><span>hasilTgl</span><span>${hasilTgl} ${b_masehi} ${thnm}</span></div>
     <div class="row"><span>Total Alamah</span><span>${hasilAkhirAlamah3}</span></div>
     <div class="row"><span>Total Hissoh</span><span>${hasilAkhirHissoh3}</span></div>
     <div class="row"><span>Total Wasath</span><span>${hasilAkhirWasat3}</span></div>
@@ -1422,12 +1539,15 @@ let hasilTgl = tglmm === 0 ? 31 : tglmm;
     <div class="row"><span>Hissoh Saah</span><span>${hissohsaah}</span></div>
     <div class="row"><span>Ta'dil Alamah</span><span>${tadilalamah2}</span></div>
     <div class="row"><span>Alamah Muadalah JKT</span><span>${jkt3}</span></div>
-    <div class="row"><span>Thul Balad</span><span>${koorlong}</span></div>
+    <div class="row"><span>Thul Balad - Longitude</span><span>${koorlong}</span></div>
     <div class="row"><span>Selisih Waktu</span><span>${selisihwaktu2}</span></div>
     <div class="row"><span>Alamah Muadalah Bibaladika</span><span>${bittatbieq2}</span></div>
     <div class="row"><span>Yaqoul Ijtima</span><span>(${indexYaqoulijtima}) ${yaqoulijtima}</span></div>
-    <div class="row"><span>Sa'ah Ijtima Gurubiyah</span><span>${sig2}</span></div>
-    <div class="row"><span>Saah Ijtima Zawaliyah / (WIB)</span><span>${siz2}</span></div>
+    <div class="row"><span>Arudh Balad - Latitude</span><span>${koorlat}</span></div> 
+    <div class="row"><span>Zawal ~ pi-yaumil-ijtima</span><span>${dzuhur}</span></div>
+    <div class="row"><span>Maghrib ~ pi-yaumil-ijtima</span><span>${maghrib}</span></div>
+    <div class="row"><span>Saah Ijtima Bilgurubiyah</span><span>${sig2}</span></div>
+    <div class="row"><span>Saah Ijtima Bizzawaliyah</span><span>${siz2}</span></div>
     <div class="row"><span>Minal Ijtima Ilal-gurub</span><span>${mig2}</span></div>
     <div class="row"><span>Irtipa Hilal Ba'dal-gurub</span><span>${irtipa2}</span></div>
     <div class="row"><span>Mukstul Hilal Fauqol-ufq</span><span>${mukstulhilal2}</span></div>
@@ -1436,9 +1556,9 @@ let hasilTgl = tglmm === 0 ? 31 : tglmm;
 <div class="ringkasan"><b>* RINGKASAN *</b></div>
     <div class="poinHasilHisab">
     <div class="row"><span>Awal Bulan </span><span>${bulanYangDimaksud} ${tahunYangDimaksud} H</span></div>
-    <div class="row"><span>Jatuh Pada Hari </span><span>${jatuhhari} ${pasar}, ${hasilTgl} ${b_masehi_nama} ${thM} </span></div>
-    <div class="row"><span>Ijtima Terjadi Pada ${tjdIjt}:</span><span> ${yaqoulijtima}, ${thM}</span></div>
-    <div class="row"><span>Jam Ijtima  </span><span>${jmsiz2}:${jmsiz4} WIB | ${jmsig2}:${jmsig4} WGB </span></div>
+    <div class="row"><span>Jatuh Pada Hari </span><span>${jatuhhari} ${hasilTanggalMasehi} M</span></div>
+    <div class="row"><span>Ijtima Terjadi Pada ${tjdIjt}</span><span> ${yaqoulijtima}</span></div>
+    <div class="row"><span>Jam Ijtima  </span><span>${jmsiz2}:${jmsiz4} WIS | ${jmsig2}:${jmsig4} WGB </span></div>
     <div class="row"><span>Ketinggian Hilal </span><span>{Malam ${yaqoulijtima2}} ${jmipa2}°${jmipa4}'</span></div>
     <div class="row"><span>Patokan Imkan </span><span>${ptkimkan} | [${ikngoerikn}]</span></div>
     <div class="row"><span>Lama Hilal diatas Ufuk </span><span>${jmmks2}:${jmmks4}</span></div>
@@ -1447,7 +1567,7 @@ let hasilTgl = tglmm === 0 ? 31 : tglmm;
     </div>
     
 
-   <div class="note"><small>* Penangalan masehi memakai hisab urfi</small></div>
+   <div class="note"><small>* Penangalan masehi memakai hisab urfi / Istilahi</small></div>
    
    </div>
    
