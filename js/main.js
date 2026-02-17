@@ -1556,7 +1556,7 @@ function toBurujDMS(x){
     const tAshar = hitungBusur(hAshar);
 
     const terbit = zawal - tTerbit;
-    const dzh = zawal + (2/6);
+    const dzh = zawal + (1/60);
     const dzuhur = dzh.toFixed(3);
     const mgb = zawal + tMaghrib + (2/60);
     const maghrib = mgb.toFixed(3);
@@ -1706,7 +1706,7 @@ const bulanHijriyah = ["Dzul Hijjah", "Muharom", "Sopar", "Robiul Awal", "Robius
     <div class="row"><span>Alamah Muadalah Bibaladika +1</span><span>${toDMS(bittatbieq2)}</span></div>
     <div class="row"><span>Yaqoul Ijtima</span><span>${indexYaqoulijtima}<sup>h</sup> ${yaqoulijtima}</span></div>
     <div class="row"><span>Arudh Balad - Latitude</span><span>${toDMS(koorlat)}</span></div> 
-    <div class="row"><span>Waktu Zawal Saat Ijtima</span><span>${toHMS(dzuhur)}</span></div>
+    <div class="row"><span>Waktu Zawal Saat Ijtima</span><span>${toHMS(zawal)}</span></div>
     <div class="row"><span>Waktu Maghrib Saat Ijtima</span><span>${toHMS(maghrib)}</span></div>
     <div class="row"><span>Saah Ijtima Bilgurubiyah</span><span>${toHMS(sig2)}</span></div>
     <div class="row"><span>Saah Ijtima Bizzawaliyah</span><span>${toHMS(siz2)}</span></div>
