@@ -1,177 +1,275 @@
-const settings = {
-  ihtiyat: Number(localStorage.getItem('ihtiyat')) || 0
-};
-// CIANJUR lat: -6.786 long: 107.173
+
+// ============================================
+// KONFIGURASI & SETTINGS
+// ============================================
 const lokasi = {lat: -6.786, lon: 107.173, tz: 7};
 let today = new Date();
 let currentMonth = today.getMonth();
-let currentYear  = today.getFullYear();
+let currentYear = today.getFullYear();
+
+// UTILITY FUNCTIONS
 const d2r = d => d * Math.PI / 180;
 const r2d = r => r * 180 / Math.PI;
-function time(x){
+
+function time(x) {
   x = (x + 24) % 24;
   let h = Math.floor(x);
   let m = Math.round((x - h) * 60);
-  if(m === 60){ h++; m = 0; }
-  return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
+  if (m === 60) {
+    h = (h + 1) % 24;
+    m = 0;
+  }
+  return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
 }
-function timeToSeconds(t){
-  const [h,m] = t.split(':').map(Number);
-  return h*3600 + m*60;
+
+function timeToSeconds(t) {
+  const [h, m] = t.split(':').map(Number);
+  return h * 3600 + m * 60;
 }
-function pad(n){ return String(n).padStart(2,'0'); }
-function julianDay(y,m,d){
-  if(m<=2){ y--; m+=12; }
-  const A = Math.floor(y/100);
-  const B = 2 - A + Math.floor(A/4);
-  return Math.floor(365.25*(y+4716))
-       + Math.floor(30.6001*(m+1))
-       + d + B - 1524.5;
+
+function pad(n) { return String(n).padStart(2, '0'); }
+
+// ============================================
+// HISAB FUNCTIONS
+// ============================================
+function julianDay(y, m, d) {
+  // Menggunakan UTC midday untuk akurasi
+  const date = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
+  const year = date.getUTCFullYear();
+  const month = date.getUTCMonth() + 1;
+  const day = date.getUTCDate();
+  
+  let Y = year;
+  let M = month;
+  if (M <= 2) {
+    Y--;
+    M += 12;
+  }
+  const A = Math.floor(Y / 100);
+  const B = 2 - A + Math.floor(A / 4);
+  return Math.floor(365.25 * (Y + 4716)) +
+         Math.floor(30.6001 * (M + 1)) +
+         day + B - 1524.5;
 }
-function solar(jd){
-  const T = (jd - 2451545)/36525;
-  const L = (280.46646 + 36000.76983*T) % 360;
-  const g = 357.52911 + 35999.05029*T;
-  const C = (1.914602 - 0.004817*T) * Math.sin(d2r(g))
-          + 0.019993 * Math.sin(d2r(2*g));
+
+function solar(jd) {
+  const T = (jd - 2451545) / 36525;
+  const L = (280.46646 + 36000.76983 * T) % 360;
+  const g = 357.52911 + 35999.05029 * T;
+
+  const C = (1.914602 - 0.004817 * T) * Math.sin(d2r(g)) +
+           0.019993 * Math.sin(d2r(2 * g));
+
   const λ = L + C;
-  const ε = 23.439291 - 0.0130042*T;
-  const δ = r2d(Math.asin(Math.sin(d2r(ε))*Math.sin(d2r(λ))));
+  const ε = 23.439291 - 0.0130042 * T;
+
+  const δ = r2d(Math.asin(Math.sin(d2r(ε)) * Math.sin(d2r(λ))));
+
   const EoT = 4 * r2d(
-    Math.tan(d2r(ε/2))**2 * Math.sin(d2r(2*L))
-    - 2*0.016708*Math.sin(d2r(g))
+    Math.tan(d2r(ε / 2)) ** 2 * Math.sin(d2r(2 * L)) -
+    2 * 0.016708 * Math.sin(d2r(g))
   );
+
   return { δ, EoT };
 }
 
-function hourAngle(lat,δ,h){
-  return r2d(Math.acos(
-    (Math.sin(d2r(h))
-    - Math.sin(d2r(lat))*Math.sin(d2r(δ)))
-    / (Math.cos(d2r(lat))*Math.cos(d2r(δ)))
-  ));
+function hourAngle(lat, δ, h) {
+  let value = (Math.sin(d2r(h)) - Math.sin(d2r(lat)) * Math.sin(d2r(δ))) /
+              (Math.cos(d2r(lat)) * Math.cos(d2r(δ)));
+  
+  // Clamp value ke range [-1, 1] untuk menghindari NaN
+  value = Math.max(-1, Math.min(1, value));
+  
+  return r2d(Math.acos(value));
 }
 
-function hitungSholat(lat,lon,tz){
+function dip(h) {
+  return 0.0293 * Math.sqrt(h);
+}
+
+// ============================================
+// HITUNG JADWAL SHOLAT
+// ============================================
+function hitungSholat(lat, lon, tz, settings) {
   const d = new Date();
-  const jd = julianDay(d.getFullYear(), d.getMonth()+1, d.getDate());
+  const jd = julianDay(d.getFullYear(), d.getMonth() + 1, d.getDate());
   const { δ, EoT } = solar(jd);
 
-  const dz = 12 + tz - lon/15 - EoT/60;
+  const dz = 12 + tz - lon / 15 - EoT / 60;
   const iht = settings.ihtiyat / 60;
 
-  const subuh   = dz - hourAngle(lat,δ,-20)/15 + iht;
-  const terbit  = dz - hourAngle(lat,δ,-1)/15 - iht;
-  const dhuha   = dz - hourAngle(lat,δ,4.5)/15; + iht;
-  const maghrib = dz + hourAngle(lat,δ,-1)/15 + iht;
-  const isya    = dz + hourAngle(lat,δ,-18)/15 + iht;
+  // Koreksi ketinggian
+  const dipH = (settings.useAltitude && settings.altitude > 0) 
+    ? dip(settings.altitude) 
+    : 0;
 
-  const asAlt = r2d(Math.atan(1/(1+Math.tan(Math.abs(d2r(lat-δ))))));
-  const ashar = dz + hourAngle(lat,δ,asAlt)/15 + iht;
-  const imsak = subuh - 10/60;
+  // Perhitungan waktu sholat
+  const subuh = dz - hourAngle(lat, δ, -20 - dipH) / 15 + iht;
+  const terbit = dz - hourAngle(lat, δ, -1 - dipH) / 15 - iht;
+  const dhuha = terbit + (4.5 / 15) + iht; // 4.5° setelah terbit
+  const maghrib = dz + hourAngle(lat, δ, -1 - dipH) / 15 + iht;
+  const isya = dz + hourAngle(lat, δ, -18 - dipH) / 15 + iht;
+
+  const asAlt = r2d(Math.atan(1 / (1 + Math.tan(Math.abs(d2r(lat - δ))))));
+  const ashar = dz + hourAngle(lat, δ, asAlt) / 15 + iht;
+
+  const imsak = subuh - 10 / 60;
 
   return {
-    imsak  : time(imsak),
-    subuh  : time(subuh),
-    terbit : time(terbit),
-    dhuha  : time(dhuha),
-    dzuhur : time(dz + iht),
-    ashar  : time(ashar),
+    imsak: time(imsak),
+    subuh: time(subuh),
+    terbit: time(terbit),
+    dhuha: time(dhuha),
+    dzuhur: time(dz + iht),
+    ashar: time(ashar),
     maghrib: time(maghrib),
-    isya   : time(isya)
+    isya: time(isya)
   };
 }
 
-function updateSholatUI(j){
-  for(let k in j){
+function updateSholatUI(j) {
+  for (let k in j) {
     const el = document.getElementById(k);
-    if(el) el.innerText = j[k];
+    if (el) el.innerText = j[k];
   }
 }
 
-/* ====================================================
-   NEXT SHOLAT & COUNTDOWN
-==================================================== */
-function getNextSholat(j){
+// ============================================
+// NEXT SHOLAT & COUNTDOWN
+// ============================================
+function getNextSholat(jadwal) {
   const urutan = [
-    ['subuh','Subuh'],['terbit','Terbit'],['dhuha','Dhuha'],
-    ['dzuhur','Dzuhur'],['ashar','Ashar'],
-    ['maghrib','Maghrib'],['isya','Isya']
+    { id: 'subuh', label: 'Subuh' },
+    { id: 'terbit', label: 'Terbit' },
+    { id: 'dhuha', label: 'Dhuha' },
+    { id: 'dzuhur', label: 'Dzuhur' },
+    { id: 'ashar', label: 'Ashar' },
+    { id: 'maghrib', label: 'Maghrib' },
+    { id: 'isya', label: 'Isya' }
   ];
 
   const now = new Date();
-  const nowSec = now.getHours()*3600 + now.getMinutes()*60 + now.getSeconds();
-
-  for(let [k,l] of urutan){
-    if(timeToSeconds(j[k]) > nowSec){
-      return { label:l, time:j[k], tomorrow:false };
+  const nowSec = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+  
+  // Cari waktu sholat berikutnya
+  for (let item of urutan) {
+    const waktuSec = timeToSeconds(jadwal[item.id]);
+    if (waktuSec > nowSec) {
+      return {
+        label: item.label,
+        time: jadwal[item.id],
+        tomorrow: false
+      };
     }
   }
-  return { label:'Subuh', time:j.subuh, tomorrow:true };
+  
+  // Jika semua sudah lewat, ambil subuh besok
+  return {
+    label: 'Subuh',
+    time: jadwal.subuh,
+    tomorrow: true
+  };
 }
 
-function startCountdown(j){
-  setInterval(()=>{
-    const next = getNextSholat(j);
+let countdownInterval = null;
+
+function startCountdown(jadwal) {
+  // Hapus interval lama jika ada
+  if (countdownInterval) {
+    clearInterval(countdownInterval);
+  }
+  
+  countdownInterval = setInterval(() => {
+    const next = getNextSholat(jadwal);
     const now = new Date();
     const target = new Date();
-    const [h,m] = next.time.split(':').map(Number);
-    target.setHours(h,m,0,0);
-    if(next.tomorrow) target.setDate(target.getDate()+1);
+    
+    const [h, m] = next.time.split(':').map(Number);
+    target.setHours(h, m, 0, 0);
+    if (next.tomorrow) target.setDate(target.getDate() + 1);
 
-    let diff = Math.max(0, Math.floor((target-now)/1000));
-    const hh = Math.floor(diff/3600);
-    const mm = Math.floor((diff%3600)/60);
-    const ss = diff%60;
+    let diff = Math.max(0, Math.floor((target - now) / 1000));
+    const hh = Math.floor(diff / 3600);
+    const mm = Math.floor((diff % 3600) / 60);
+    const ss = diff % 60;
 
     const n = document.getElementById('nextSholatName');
     const c = document.getElementById('countdownTime');
-    if(n) n.innerText = `${next.label} ${next.time}`;
-    if(c) c.innerText = `- ${pad(hh)}:${pad(mm)}:${pad(ss)}`;
-  },1000);
+    if (n) n.innerText = `${next.label} ${next.time}`;
+    if (c) c.innerText = `- ${pad(hh)}:${pad(mm)}:${pad(ss)}`;
+  }, 1000);
 }
 
-/* ====================================================
-   KALENDER + HIJRIYAH + PASARAN (FULL GRID)
-==================================================== */
-const namaBulan = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-const pasaran   = ['Legi','Pahing','Pon','Wage','Kliwon'];
+// ============================================
+// KALENDER & HIJRIYAH
+// ============================================
+const namaBulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+const pasaran = ['Legi', 'Pahing', 'Pon', 'Wage', 'Kliwon'];
+const namaBulanHijri = [
+  'محرم', 'صفر', 'ربيع الأول', 'ربيع الآخر',
+  'جمادى الأولى', 'جمادى الآخرة', 'رجب', 'شعبان',
+  'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة'
+];
 
-// TAMBAHKAN DATA BULAN HIJRIYAH DARI HASIL HISAB
-// HITUNG BERAPA HARI SETIAP BULANNYA DARI HASIL HISAB SULAMUN NAYIREIN
+// Data hisab untuk tahun Hijriyah
 const hijriMonthLengths = {
-  1446:[30,29,30,29,30,29,30,29,30,29,29,29],
-  1447:[30,29,30,29,30,30,30,30,29,30,29,29],
-  1448:[30,29,29,30,30,29,30,30,30,29,30,29],
+  1446: [30, 29, 30, 29, 30, 29, 30, 29, 30, 29, 29, 29],
+  1447: [30, 29, 30, 29, 30, 30, 30, 30, 29, 30, 29, 29],
+  1448: [30, 29, 29, 30, 30, 29, 30, 30, 30, 29, 30, 29],
 };
+
+// Fungsi untuk mendapatkan panjang bulan dengan fallback yang lebih baik
+function getHijriMonthLength(year, month) {
+  // Coba dapatkan dari data yang ada
+  if (hijriMonthLengths[year] && hijriMonthLengths[year][month - 1]) {
+    return hijriMonthLengths[year][month - 1];
+  }
+  
+  // Fallback: hisab sederhana (bergantian 30/29)
+  // Bulan ganjil = 30, genap = 29, kecuali Dzulhijjah (bulan 12) bisa 30/29
+  if (month === 12) {
+    // Dzulhijjah: asumsi 30 untuk tahun kabisat (sederhana)
+    return (year % 30 === 0) ? 30 : 29;
+  }
+  return (month % 2 === 1) ? 30 : 29;
+}
 
 const hijriAnchor = {
-  startDate: new Date(2025,0,1),
-  day: 1, month: 7, year: 1446
+  startDate: new Date(2025, 0, 1),
+  day: 1,
+  month: 7,
+  year: 1446
 };
 
-function toArab(n){
-  const a = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
-  return String(n).replace(/\d/g,d=>a[d]);
+function toArab(n) {
+  const a = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+  return String(n).replace(/\d/g, d => a[d]);
 }
 
-function getHijri(date){
-  let diff = Math.floor((date - hijriAnchor.startDate)/86400000);
+function getHijri(date) {
+  let diff = Math.floor((date - hijriAnchor.startDate) / 86400000);
   let { day, month, year } = hijriAnchor;
 
-  while(diff !== 0){
-    if(diff > 0){
-      const len = hijriMonthLengths[year]?.[month-1] || 30;
+  while (diff !== 0) {
+    if (diff > 0) {
+      const len = getHijriMonthLength(year, month);
       day++;
-      if(day > len){
-        day = 1; month++;
-        if(month > 12){ month = 1; year++; }
+      if (day > len) {
+        day = 1;
+        month++;
+        if (month > 12) {
+          month = 1;
+          year++;
+        }
       }
       diff--;
-    }else{
+    } else {
       month--;
-      if(month < 1){ month = 12; year--; }
-      const len = hijriMonthLengths[year]?.[month-1] || 30;
+      if (month < 1) {
+        month = 12;
+        year--;
+      }
+      const len = getHijriMonthLength(year, month);
       day = len;
       diff++;
     }
@@ -179,93 +277,68 @@ function getHijri(date){
   return { day, month, year };
 }
 
-function getPasaran(date){
-  const ref = new Date(2020,0,1);
-  const diff = Math.floor((date - ref)/86400000);
+function getPasaran(date) {
+  const ref = new Date(2020, 0, 1);
+  const diff = Math.floor((date - ref) / 86400000);
   return pasaran[(diff % 5 + 5) % 5];
 }
-const namaBulanHijri = [
-  'محرم', 'صفر', 'ربيع الأول', 'ربيع الآخر',
-  'جمادى الأولى', 'جمادى الآخرة', 'رجب', 'شعبان',
-  'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة'
-];
 
-function renderCalendar(){
+function renderCalendar() {
   const daysEl = document.getElementById('calendarDays');
-  if(!daysEl) return;
+  if (!daysEl) return;
 
   daysEl.innerHTML = '';
 
-  document.getElementById('monthName').innerText = namaBulan[currentMonth];
-  document.getElementById('yearName').innerText  = currentYear;
+  const monthNameEl = document.getElementById('monthName');
+  const yearNameEl = document.getElementById('yearName');
+  if (monthNameEl) monthNameEl.innerText = namaBulan[currentMonth];
+  if (yearNameEl) yearNameEl.innerText = currentYear;
 
-  /* ==== HEADER HIJRI (AWAL–AKHIR) ==== */
+  // Header Hijriyah
   const hijriStart = getHijri(new Date(currentYear, currentMonth, 1));
-  const lastDay    = new Date(currentYear, currentMonth + 1, 0).getDate();
-  const hijriEnd   = getHijri(new Date(currentYear, currentMonth, lastDay));
+  const lastDay = new Date(currentYear, currentMonth + 1, 0).getDate();
+  const hijriEnd = getHijri(new Date(currentYear, currentMonth, lastDay));
 
   let hijriText;
-
   if (hijriStart.month !== hijriEnd.month) {
     if (hijriStart.year === hijriEnd.year) {
-      hijriText =
-        namaBulanHijri[hijriStart.month - 1] +
-        ' – ' +
-        namaBulanHijri[hijriEnd.month - 1] +
-        ' ' +
-        toArab(hijriStart.year);
+      hijriText = `${namaBulanHijri[hijriStart.month - 1]} – ${namaBulanHijri[hijriEnd.month - 1]} ${toArab(hijriStart.year)}`;
     } else {
-      hijriText =
-        namaBulanHijri[hijriStart.month - 1] + ' ' + toArab(hijriStart.year) +
-        ' – ' +
-        namaBulanHijri[hijriEnd.month - 1] + ' ' + toArab(hijriEnd.year);
+      hijriText = `${namaBulanHijri[hijriStart.month - 1]} ${toArab(hijriStart.year)} – ${namaBulanHijri[hijriEnd.month - 1]} ${toArab(hijriEnd.year)}`;
     }
   } else {
-    hijriText =
-      namaBulanHijri[hijriStart.month - 1] +
-      ' ' +
-      toArab(hijriStart.year);
+    hijriText = `${namaBulanHijri[hijriStart.month - 1]} ${toArab(hijriStart.year)}`;
   }
 
-  document.getElementById('hijriMonthYear').innerText = hijriText;
+  const hijriEl = document.getElementById('hijriMonthYear');
+  if (hijriEl) hijriEl.innerText = hijriText;
 
-  /* ===== TANGGAL HARI INI (REALTIME) ===== */
-  const todayxxx = new Date();
-  const tDate  = todayxxx.getDate();
-  const tMonth = todayxxx.getMonth();
-  const tYear  = todayxxx.getFullYear();
+  // Data hari ini
+  const todayDate = new Date();
+  const tDate = todayDate.getDate();
+  const tMonth = todayDate.getMonth();
+  const tYear = todayDate.getFullYear();
 
-  /* =============== DATA KALENDER =============== */
-
-  const firstDay    = new Date(currentYear, currentMonth, 1).getDay();
+  // Hitung hari dalam bulan
+  const firstDay = new Date(currentYear, currentMonth, 1).getDay();
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-  const daysInPrev  = new Date(currentYear, currentMonth, 0).getDate();
+  const daysInPrev = new Date(currentYear, currentMonth, 0).getDate();
 
-  /* ============= BULAN SEBELUM =============== */
-
-  for(let i = firstDay - 1; i >= 0; i--){
-    daysEl.innerHTML += `
-      <div class="day empty prev">
-        <span class="date">${daysInPrev - i}</span>
-      </div>`;
+  // Bulan sebelumnya
+  for (let i = firstDay - 1; i >= 0; i--) {
+    daysEl.innerHTML += `<div class="day empty prev"><span class="date">${daysInPrev - i}</span></div>`;
   }
 
-  /* ================= BULAN AKTIF ================= */
-
-  for(let d = 1; d <= daysInMonth; d++){
+  // Bulan aktif
+  for (let d = 1; d <= daysInMonth; d++) {
     const date = new Date(currentYear, currentMonth, d);
     const h = getHijri(date);
 
     let cls = 'day';
-    if(date.getDay() === 0) cls += ' ahad';
-    if(date.getDay() === 5) cls += ' jumat';
+    if (date.getDay() === 0) cls += ' ahad';
+    if (date.getDay() === 5) cls += ' jumat';
 
-    /* ===== HARI INI ===== */
-    if (
-      d === tDate &&
-      currentMonth === tMonth &&
-      currentYear === tYear
-    ) {
+    if (d === tDate && currentMonth === tMonth && currentYear === tYear) {
       cls += ' today';
     }
 
@@ -277,104 +350,149 @@ function renderCalendar(){
       </div>`;
   }
 
-  /* ============== BULAN SESUDAH ============== */
-
+  // Bulan berikutnya
   const totalUsed = firstDay + daysInMonth;
   const totalCell = Math.ceil(totalUsed / 7) * 7;
   const sisa = totalCell - daysEl.children.length;
 
-  for(let d = 1; d <= sisa; d++){
-    daysEl.innerHTML += `
-      <div class="day empty next">
-        <span class="date">${d}</span>
-      </div>`;
+  for (let d = 1; d <= sisa; d++) {
+    daysEl.innerHTML += `<div class="day empty next"><span class="date">${d}</span></div>`;
   }
 }
 
-/* ===================================================
-   INIT + UI BINDING (AMAN)
-=================================================== */
-document.addEventListener('DOMContentLoaded',()=>{
-
+// ============================================
+// INITIALIZATION - SEMUA DALAM SATU EVENT LISTENER
+// ============================================
+document.addEventListener('DOMContentLoaded', () => {
+  
+  // ===== SETTINGS =====
+  const settings = {
+    ihtiyat: Number(localStorage.getItem('ihtiyat')) || 0,
+    altitude: Number(localStorage.getItem('altitude')) || 0,
+    useAltitude: localStorage.getItem('use_altitude') !== 'false'
+  };
+  
+  // ===== ELEMEN DOM =====
+  // Menu & Pages
   const menuPengaturan = document.getElementById('menuPengaturan');
-  const settingsPage   = document.getElementById('settingsPage');
-  const closeSettings  = document.getElementById('closeSettings');
-
-  if(menuPengaturan && settingsPage && closeSettings){
-    settingsPage.style.display = 'none';
-    menuPengaturan.onclick = ()=> settingsPage.style.display='block';
-    closeSettings.onclick  = ()=> settingsPage.style.display='none';
-  }
-
-  const sheet     = document.getElementById('sheetIhtiyat');
-  const openBtn   = document.getElementById('openIhtiyat');
+  const settingsPage = document.getElementById('settingsPage');
+  const closeSettings = document.getElementById('closeSettings');
+  
+  // Ihtiyat
+  const sheet = document.getElementById('sheetIhtiyat');
+  const openBtn = document.getElementById('openIhtiyat');
   const valueText = document.getElementById('ihtiyatValue');
-
-  if(valueText) valueText.innerText = settings.ihtiyat+' Menit';
-
-  openBtn?.addEventListener('click',()=>sheet?.classList.add('show'));
-  sheet?.querySelector('.sheet-close')?.addEventListener('click',()=>sheet.classList.remove('show'));
-
-  sheet?.querySelectorAll('.sheet-option').forEach(opt=>{
-    opt.addEventListener('click',()=>{
+  
+  // Altitude
+  const toggleAltitude = document.getElementById('toggleAltitude');
+  const openAltitude = document.getElementById('openAltitude');
+  const altitudeValue = document.getElementById('altitudeValue');
+  const altitudeStatus = document.getElementById('altitudeStatus');
+  const altitudeDesc = document.getElementById('altitudeDesc');
+  
+  // Location
+  const locationModeValue = document.getElementById('locationModeValue');
+  const locationModeDesc = document.getElementById('locationModeDesc');
+  const coordinateDesc = document.getElementById('coordinateDesc');
+  const openLocationMode = document.getElementById('openLocationMode');
+  const openCoordinate = document.getElementById('openCoordinate');
+  
+  // Calendar
+  const prevMonth = document.getElementById('prevMonth');
+  const nextMonth = document.getElementById('nextMonth');
+  
+  // ===== FUNGSI-FUNGSI UI =====
+  
+  // Ihtiyat
+  if (valueText) valueText.innerText = settings.ihtiyat + ' Menit';
+  
+  openBtn?.addEventListener('click', () => sheet?.classList.add('show'));
+  sheet?.querySelector('.sheet-close')?.addEventListener('click', () => sheet.classList.remove('show'));
+  
+  sheet?.querySelectorAll('.sheet-option').forEach(opt => {
+    opt.addEventListener('click', () => {
       settings.ihtiyat = Number(opt.dataset.val);
-      localStorage.setItem('ihtiyat',settings.ihtiyat);
-      if(valueText) valueText.innerText = settings.ihtiyat+' Menit';
+      localStorage.setItem('ihtiyat', settings.ihtiyat);
+      if (valueText) valueText.innerText = settings.ihtiyat + ' Menit';
       sheet.classList.remove('show');
-      const j = hitungSholat(lokasi.lat,lokasi.lon,lokasi.tz);
+      
+      // Update jadwal
+      const j = hitungSholat(lokasi.lat, lokasi.lon, lokasi.tz, settings);
       updateSholatUI(j);
+      startCountdown(j);
     });
   });
-
-  const jadwal = hitungSholat(lokasi.lat,lokasi.lon,lokasi.tz);
-  updateSholatUI(jadwal);
-  startCountdown(jadwal);
-  renderCalendar();
-
-  document.getElementById('prevMonth')?.addEventListener('click',()=>{
-    currentMonth--; if(currentMonth<0){currentMonth=11;currentYear--;}
-    renderCalendar();
-  });
-
-  document.getElementById('nextMonth')?.addEventListener('click',()=>{
-    currentMonth++; if(currentMonth>11){currentMonth=0;currentYear++;}
-    renderCalendar();
-  });
-
-  /* =========================
-     LOKASI
-  ========================= */
-  const locationModeValue = document.getElementById('locationModeValue');
-  const locationModeDesc  = document.getElementById('locationModeDesc');
-  const coordinateDesc    = document.getElementById('coordinateDesc');
-  const openLocationMode  = document.getElementById('openLocationMode');
-  const openCoordinate    = document.getElementById('openCoordinate');
-
-  const locationSettings = {
-    mode : localStorage.getItem('loc_mode') || 'auto',
-    lat  : Number(localStorage.getItem('lat')) || lokasi.lat,
-    lon  : Number(localStorage.getItem('lon')) || lokasi.lon,
-  };
-
-  function updateLocationUI(){
-    if(!locationModeValue) return;
-    locationModeValue.innerText = locationSettings.mode==='auto'?'Otomatis':'Manual';
-    if(locationModeDesc) locationModeDesc.innerText = locationModeValue.innerText;
-    if(coordinateDesc) coordinateDesc.innerText =
-      locationSettings.lat.toFixed(3)+', '+locationSettings.lon.toFixed(3);
+  
+  // Altitude
+  function updateAltitudeUI() {
+    if (altitudeValue) altitudeValue.innerText = settings.altitude + ' MDPL';
+    if (altitudeStatus) altitudeStatus.innerText = settings.useAltitude ? 'Aktif' : 'Nonaktif';
+    if (altitudeDesc) altitudeDesc.innerText = settings.useAltitude ? 'Aktif' : 'Nonaktif';
   }
-
-  function applyLocation(){
+  
+  function applyAltitude() {
+    const j = hitungSholat(lokasi.lat, lokasi.lon, lokasi.tz, settings);
+    updateSholatUI(j);
+    startCountdown(j);
+  }
+  
+  toggleAltitude?.addEventListener('click', () => {
+    settings.useAltitude = !settings.useAltitude;
+    localStorage.setItem('use_altitude', settings.useAltitude);
+    updateAltitudeUI();
+    applyAltitude();
+  });
+  
+  openAltitude?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    
+    if (!settings.useAltitude) {
+      if (confirm('Ketinggian nonaktif. Aktifkan sekarang?')) {
+        settings.useAltitude = true;
+        localStorage.setItem('use_altitude', true);
+        updateAltitudeUI();
+      } else {
+        return;
+      }
+    }
+    
+    const v = prompt('        Masukkan ketinggian tempat', settings.altitude);
+    if (v === null || isNaN(v)) return;
+    
+    settings.altitude = Number(v);
+    localStorage.setItem('altitude', settings.altitude);
+    
+    updateAltitudeUI();
+    applyAltitude();
+  });
+  
+  // Location
+  const locationSettings = {
+    mode: localStorage.getItem('loc_mode') || 'auto',
+    lat: Number(localStorage.getItem('lat')) || lokasi.lat,
+    lon: Number(localStorage.getItem('lon')) || lokasi.lon,
+  };
+  
+  function updateLocationUI() {
+    if (!locationModeValue) return;
+    locationModeValue.innerText = locationSettings.mode === 'auto' ? 'Otomatis' : 'Manual';
+    if (locationModeDesc) locationModeDesc.innerText = locationModeValue.innerText;
+    if (coordinateDesc) {
+      coordinateDesc.innerText = locationSettings.lat.toFixed(3) + ', ' + locationSettings.lon.toFixed(3);
+    }
+  }
+  
+  function applyLocation() {
     lokasi.lat = locationSettings.lat;
     lokasi.lon = locationSettings.lon;
-    const j = hitungSholat(lokasi.lat,lokasi.lon,lokasi.tz);
+    const j = hitungSholat(lokasi.lat, lokasi.lon, lokasi.tz, settings);
     updateSholatUI(j);
+    startCountdown(j);
   }
-
-  function getAutoLocation(){
-    if(!navigator.geolocation) return;
-    navigator.geolocation.getCurrentPosition(pos=>{
-      locationSettings.lat = pos.coords.latitude;
+  
+  function getAutoLocation() {
+    if (!navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(pos => {
       locationSettings.lat = pos.coords.latitude;
       locationSettings.lon = pos.coords.longitude;
       localStorage.setItem('lat', locationSettings.lat);
@@ -383,24 +501,30 @@ document.addEventListener('DOMContentLoaded',()=>{
       applyLocation();
     });
   }
-
-  openLocationMode?.addEventListener('click',()=>{
-    if(locationSettings.mode==='auto'){
-      locationSettings.mode='manual';
-    }else{
-      locationSettings.mode='auto';
+  
+  openLocationMode?.addEventListener('click', () => {
+    if (locationSettings.mode === 'auto') {
+      locationSettings.mode = 'manual';
+    } else {
+      locationSettings.mode = 'auto';
       getAutoLocation();
     }
     localStorage.setItem('loc_mode', locationSettings.mode);
     updateLocationUI();
   });
-
-  openCoordinate?.addEventListener('click',()=>{
-    if(locationSettings.mode!=='manual') return;
+  
+  openCoordinate?.addEventListener('click', () => {
+    if (locationSettings.mode !== 'manual') {
+      alert('Mode lokasi harus Manual untuk mengubah koordinat');
+      return;
+    }
     const lat = prompt('Masukkan Latitude', locationSettings.lat);
     const lon = prompt('Masukkan Longitude', locationSettings.lon);
-    if(lat===null || lon===null) return;
-    if(isNaN(lat) || isNaN(lon)) return;
+    if (lat === null || lon === null) return;
+    if (isNaN(lat) || isNaN(lon)) {
+      alert('Koordinat tidak valid');
+      return;
+    }
     locationSettings.lat = Number(lat);
     locationSettings.lon = Number(lon);
     localStorage.setItem('lat', locationSettings.lat);
@@ -408,69 +532,48 @@ document.addEventListener('DOMContentLoaded',()=>{
     updateLocationUI();
     applyLocation();
   });
-
-  updateLocationUI();
-  if(locationSettings.mode==='auto'){ getAutoLocation(); }
-  else{ applyLocation(); }
-});
-
-// STATE
-settings.altitude = Number(localStorage.getItem('altitude')) || 0;
-settings.useAltitude = localStorage.getItem('use_altitude') !== 'false';
-
-// ELEMEN
-const toggleAltitude  = document.getElementById('toggleAltitude');
-const openAltitude    = document.getElementById('openAltitude');
-const altitudeValue   = document.getElementById('altitudeValue');
-const altitudeStatus  = document.getElementById('altitudeStatus');
-const altitudeDesc    = document.getElementById('altitudeDesc');
-
-// UPDATE UI
-function updateAltitudeUI(){
-  altitudeValue.innerText = settings.altitude + ' m';
-
-  if(settings.useAltitude){
-    altitudeStatus.innerText = 'Aktif';
-    altitudeDesc.innerText   = 'Aktif';
-  }else{
-    altitudeStatus.innerText = 'Nonaktif';
-    altitudeDesc.innerText   = 'Nonaktif';
+  
+  // Menu Settings
+  if (menuPengaturan && settingsPage && closeSettings) {
+    settingsPage.style.display = 'none';
+    menuPengaturan.onclick = () => settingsPage.style.display = 'block';
+    closeSettings.onclick = () => settingsPage.style.display = 'none';
   }
-}
-
-// APPLY KE HISAB
-function applyAltitude(){
-  const j = hitungSholat(lokasi.lat, lokasi.lon, lokasi.tz);
-  updateSholatUI(j);
-}
-
-// TOGGLE AKTIF / NONAKTIF
-toggleAltitude?.addEventListener('click',()=>{
-  settings.useAltitude = !settings.useAltitude;
-  localStorage.setItem('use_altitude', settings.useAltitude);
+  
+  // Calendar Navigation
+  prevMonth?.addEventListener('click', () => {
+    currentMonth--;
+    if (currentMonth < 0) {
+      currentMonth = 11;
+      currentYear--;
+    }
+    renderCalendar();
+  });
+  
+  nextMonth?.addEventListener('click', () => {
+    currentMonth++;
+    if (currentMonth > 11) {
+      currentMonth = 0;
+      currentYear++;
+    }
+    renderCalendar();
+  });
+  
+  // ===== INITIAL RENDER =====
   updateAltitudeUI();
-  applyAltitude();
-});
-
-// INPUT NILAI KETINGGIAN
-openAltitude?.addEventListener('click',(e)=>{
-  e.stopPropagation(); // biar ga ikut toggle
-
-  if(!settings.useAltitude) return;
-
-  const v = prompt('Masukkan ketinggian tempat (meter)', settings.altitude);
-  if(v === null || isNaN(v)) return;
-
-  settings.altitude = Number(v);
-  localStorage.setItem('altitude', settings.altitude);
-
-  updateAltitudeUI();
-  applyAltitude();
-});
-
-// INIT
-document.addEventListener('DOMContentLoaded',()=>{
-  updateAltitudeUI();
+  updateLocationUI();
+  
+  if (locationSettings.mode === 'auto') {
+    getAutoLocation();
+  } else {
+    applyLocation();
+  }
+  
+  const jadwal = hitungSholat(lokasi.lat, lokasi.lon, lokasi.tz, settings);
+  updateSholatUI(jadwal);
+  startCountdown(jadwal);
+  
+  renderCalendar();
 });
 
 const resetBtn = document.getElementById('resetSettings');
@@ -518,8 +621,6 @@ function applyTheme(mode) {
 function resetTheme() {
   applyTheme("dark");
 }
-
-
 
 /* ===============================
    ELEMENT UTAMA HISAB
@@ -1594,7 +1695,6 @@ if (btnBackToIjtima) {
     inputIjtima.classList.remove('hidden');
   };
 }
-
 
 /* ===============================
    ELEMENT UTAMA KALKULATOR
