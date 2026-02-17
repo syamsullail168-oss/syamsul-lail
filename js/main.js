@@ -1434,33 +1434,89 @@ let hasilTanggalMasehi = getTanggalMasehi(tmM, bmM);
     const d2r = d => d * Math.PI / 180;
     const r2d = r => r * 180 / Math.PI;
     
-    const toDMS = x => {
-      const sign = x < 0 ? '-' : '';
-      x = Math.abs(x);
-      const d = Math.floor(x);
-      const m = Math.floor((x - d) * 60);
-      const s = ((x - d - m/60) * 3600).toFixed(1);
-      return `${sign}${d}° ${m}′ ${s}″`;
-    };
     
-    const toHMS = x => {
-      x = (x + 24) % 24;
-      const h = Math.floor(x);
-      const m = Math.floor((x - h) * 60);
-      const s = Math.round(((x - h) * 60 - m) * 60);
-      return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-    };
     
-    function menitKeMS(x){
-    const sign = x < 0 ? '−' : '';
-    x = Math.abs(x);
+    // ===============================
+// KONVERSI SUDUT & WAKTU
+// ===============================
 
-    const m = Math.floor(x);
-    const s = ((x - m) * 60).toFixed(1);
+// Derajat → DMS
+const toDMS = x => {
+  const sign = x < 0 ? '-' : '';
+  x = Math.abs(x);
 
-    return `${sign}${m}′ ${s}″`;
-    }
+  const d = Math.floor(x);
+  const mDecimal = (x - d) * 60;
+  const m = Math.floor(mDecimal);
+  let s = (mDecimal - m) * 60;
 
+  s = Math.round(s * 10) / 10;
+
+  return `${sign}${d}° ${m}′ ${s}″`;
+};
+
+// Jam desimal → HH:MM:SS
+const toHMS = x => {
+  x = (x + 24) % 24;
+
+  const h = Math.floor(x);
+  const mDecimal = (x - h) * 60;
+  const m = Math.floor(mDecimal);
+  let s = (mDecimal - m) * 60;
+
+  s = Math.round(s);
+
+  return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+};
+
+// Menit desimal → Menit & Detik
+function menitKeMS(x){
+  const sign = x < 0 ? '−' : '';
+  x = Math.abs(x);
+
+  const m = Math.floor(x);
+  let s = (x - m) * 60;
+
+  s = Math.round(s * 10) / 10;
+
+  return `${sign}${m}′ ${s}″`;
+}
+
+// ===============================
+// Derajat → Buruj DMS (30° = 1b)
+// ===============================
+function toBurujDMS(x){
+
+  const sign = x < 0 ? '-' : '';
+  x = Math.abs(x);
+
+  // Normalisasi 0–360
+  x = ((x % 360) + 360) % 360;
+
+  const buruj = Math.floor(x / 30);
+  const sisa  = x - (buruj * 30);
+
+  let d = Math.floor(sisa);
+  const mDecimal = (sisa - d) * 60;
+  let m = Math.floor(mDecimal);
+  let s = (mDecimal - m) * 60;
+
+  s = Math.round(s * 10) / 10;
+
+  // Koreksi jika detik overflow
+  if(s >= 60){
+    s = 0;
+    m += 1;
+  }
+
+  if(m >= 60){
+    m = 0;
+    d += 1;
+  }
+
+  return `${sign}${buruj}<sup>b</sup> ${d}° ${m}′ ${s}″`;
+}
+    
     let y = thnm;
     let m = b_masehi;
     if (m <= 2) { y--; m += 12; }
@@ -1610,59 +1666,71 @@ else if (drj <= 2) {ptkimkan = "3°";}
 else if (drj <= 3) {ptkimkan = "6°";}
 else if (drj <= 4) {ptkimkan = "7°";}
 
-let e = 1 + Math.trunc((tahunYangDimaksud * 11) / 30) + (tahunYangDimaksud * 354) + (totalbulan * 30) - Math.trunc((totalbulan - 1) / 2) - 384;let f = e + 227016;let g = Math.trunc(f / 1461);let thM = g * 4 + Math.trunc((f - g * 1461) / 365) + 1;let tjdIjt = sig <= 12 ? "Malam" : "Hari";let jmsiz = siz;let jmsiz2 = Math.trunc(jmsiz);let jmsiz3 = (jmsiz -jmsiz2) *60;let jmsiz4 = Math.trunc(jmsiz3);let jmsig = sig;let jmsig2 = Math.trunc(jmsig);let jmsig3 = (jmsig -jmsig2) *60;let jmsig4 = Math.trunc(jmsig3);let jmipa = irtipa;let jmipa2 = Math.trunc(jmipa);let jmipa3 = (jmipa -jmipa2) *60;let jmipa4 = Math.trunc(jmipa3);let jmmks = mukstulhilal;let jmmks2 = Math.trunc(jmmks);let jmmks3 = (jmmks -jmmks2) *60;let jmmks4 = Math.trunc(jmmks3);let qnh = nurilhilal;let qnh2 = Math.trunc(qnh);let qnh3 = (qnh -qnh2) *60;let qnh4 = Math.trunc(qnh3)
-const bulanHijriyah = ["Dzul Hijjah", "Muharom", "Sopar", "Robiul Awal", "Robius Stani","Jumadil Awal", "Jumadis Stani", "Rojab", "Syaban", "Rhomadhon","Syawal", "Dzulqodah"];let namebulan = bulanHijriyah[(totalbulan - 1 + 12) % 12];
+let e = 1 + Math.trunc((tahunYangDimaksud * 11) / 30) + (tahunYangDimaksud * 354) + (totalbulan * 30) - Math.trunc((totalbulan - 1) / 2) - 384;
+let tjdIjt = sig <= 12 ? "Malam" : "Hari";
 
+let jmsiz = siz;
+let jmsig = sig;
+let jmipa = irtipa;
+let jmmks = mukstulhilal;
+let qnh = nurilhilal;
+
+const bulanHijriyah = ["Dzul Hijjah", "Muharom", "Sopar", "Robiul Awal", "Robius Stani","Jumadil Awal", "Jumadis Stani", "Rojab", "Syaban", "Rhomadhon","Syawal", "Dzulqodah"];let namebulan = bulanHijriyah[(totalbulan - 1 + 12) % 12];
 
 // KOREKSI WAKTU MAGHBRIB DAN ZAWAL
 
    document.getElementById('hasilHisabAkhirBulan').innerHTML = `
    
    <div class="card sholat-list">
-    <div class="row"><span>Total Alamah</span><span>${hasilAkhirAlamah3}</span></div>
-    <div class="row"><span>Total Hissoh</span><span>${hasilAkhirHissoh3}</span></div>
-    <div class="row"><span>Total Wasath</span><span>${hasilAkhirWasat3}</span></div>
-    <div class="row"><span>Total Khosoh</span><span>${hasilAkhirKhosoh3}</span></div>
-    <div class="row"><span>Total Markaz</span><span>${hasilAkhirMarkaz3}</span></div>
-    <div class="row"><span>Ta'dil Khosoh</span><span>${tadilkhosoh}</span></div>
-    <div class="row"><span>Ta'dil Markaz</span><span>${tadilmarkaz}</span></div>
-    <div class="row"><span>Bu'du Goer Muadal</span><span>${buduGoerMuadal2}</span></div>
-    <div class="row"><span>Hasilu Dorob</span><span>${hasildorob2}</span></div>
-    <div class="row"><span>Ta'dil Wasath</span><span>${tadilwasat2}</span></div>
-    <div class="row"><span>Muqowam Syamsi</span><span>${muqowwamsyamsi2}</span></div>
-    <div class="row"><span>Yaqoul Ijtima Pii burj</span><span>(${mq1}) ${mq2}</span></div>
+    <div class="row"><span>Total Alamah</span><span>${toBurujDMS(hasilAkhirAlamah3)}</span></div>
+    <div class="row"><span>Total Hissoh</span><span>${toBurujDMS(hasilAkhirHissoh3)}</span></div>
+    <div class="row"><span>Total Wasath</span><span>${toBurujDMS(hasilAkhirWasat3)}</span></div>
+    <div class="row"><span>Total Khosoh</span><span>${toBurujDMS(hasilAkhirKhosoh3)}</span></div>
+    <div class="row"><span>Total Markaz</span><span>${toBurujDMS(hasilAkhirMarkaz3)}</span></div>
+    <div class="row"><span>Ta'dil Khosoh</span><span>${toDMS(tadilkhosoh)}</span></div>
+    <div class="row"><span>Ta'dil Markaz</span><span>${toDMS(tadilmarkaz)}</span></div>
+    <div class="row"><span>Bu'du Goer Muadal</span><span>${toDMS(buduGoerMuadal2)}</span></div>
+    <div class="row"><span>Hasilu Dorob</span><span>${toDMS(hasildorob2)}</span></div>
+    <div class="row"><span>Ta'dil Wasath</span><span>${toDMS(tadilwasat2)}</span></div>
+    <div class="row"><span>Muqowam Syamsi</span><span>${toBurujDMS(muqowwamsyamsi2)}</span></div>
+    <div class="row"><span>Yaqoul Ijtima Pii burj</span><span>${mq2}</span></div>
     <div class="row"><span>Hai'atul Hilal</span><span>${mq3}</span></div>
-    <div class="row"><span>Ta'dil Ayyam</span><span>${tadilayyam}</span></div>
-    <div class="row"><span>Bu'du Muadal</span><span>${budumuadal2}</span></div>
-    <div class="row"><span>Thuul Syams</span><span>${thulsyamsi2}</span></div>
-    <div class="row"><span>Hissoh Saah</span><span>${hissohsaah}</span></div>
-    <div class="row"><span>Ta'dil Alamah</span><span>${tadilalamah2}</span></div>
-    <div class="row"><span>Alamah Muadalah JKT</span><span>${jkt3}</span></div>
-    <div class="row"><span>Thul Balad - Longitude</span><span>${koorlong}</span></div>
-    <div class="row"><span>Selisih Waktu</span><span>${selisihwaktu2}</span></div>
-    <div class="row"><span>Alamah Muadalah Bibaladika +1</span><span>${bittatbieq2}</span></div>
-    <div class="row"><span>Yaqoul Ijtima</span><span>(${indexYaqoulijtima}) ${yaqoulijtima}</span></div>
-    <div class="row"><span>Arudh Balad - Latitude</span><span>${koorlat}</span></div> 
-    <div class="row"><span>Zawal ~ pi-yaumil-ijtima</span><span>${dzuhur}</span></div>
-    <div class="row"><span>Maghrib ~ pi-yaumil-ijtima</span><span>${maghrib}</span></div>
-    <div class="row"><span>Saah Ijtima Bilgurubiyah</span><span>${sig2}</span></div>
-    <div class="row"><span>Saah Ijtima Bizzawaliyah</span><span>${siz2}</span></div>
-    <div class="row"><span>Minal Ijtima Ilal-gurub</span><span>${mig2}</span></div>
-    <div class="row"><span>Irtipa Hilal Ba'dal-gurub</span><span>${irtipa2}</span></div>
-    <div class="row"><span>Mukstul Hilal Fauqol-ufq</span><span>${mukstulhilal2}</span></div>
-    <div class="row"><span>Kamyah Ardl-qomar</span><span>${kamyah}</span></div>
-    <div class="row"><span>Qous nuril-hilal</span><span>${nurilhilal2}</span></div>
+    <div class="row"><span>Ta'dil Ayyam</span><span>${toDMS(tadilayyam)}</span></div>
+    <div class="row"><span>Bu'du Muadal</span><span>${toDMS(budumuadal2)}</span></div>
+    <div class="row"><span>Thuul Syams</span><span>${toBurujDMS(thulsyamsi2)}</span></div>
+    <div class="row"><span>Hissoh Saah</span><span>${toDMS(hissohsaah)}</span></div>
+    <div class="row"><span>Ta'dil Alamah</span><span>${toDMS(tadilalamah2)}</span></div>
+    <div class="row"><span>Alamah Muadalah JKT</span><span>${toDMS(jkt3)}</span></div>
+    <div class="row"><span>Thul Balad - Longitude</span><span>${toDMS(koorlong)}</span></div>
+    <div class="row"><span>Selisih Waktu</span><span>${toHMS(selisihwaktu2)}</span></div>
+    <div class="row"><span>Alamah Muadalah Bibaladika +1</span><span>${toDMS(bittatbieq2)}</span></div>
+    <div class="row"><span>Yaqoul Ijtima</span><span>${indexYaqoulijtima}<sup>h</sup> ${yaqoulijtima}</span></div>
+    <div class="row"><span>Arudh Balad - Latitude</span><span>${toDMS(koorlat)}</span></div> 
+    <div class="row"><span>Waktu Zawal Saat Ijtima</span><span>${toHMS(dzuhur)}</span></div>
+    <div class="row"><span>Waktu Maghrib Saat Ijtima</span><span>${toHMS(maghrib)}</span></div>
+    <div class="row"><span>Saah Ijtima Bilgurubiyah</span><span>${toHMS(sig2)}</span></div>
+    <div class="row"><span>Saah Ijtima Bizzawaliyah</span><span>${toHMS(siz2)}</span></div>
+    <div class="row"><span>Minal Ijtima Ilal-gurub</span><span>${toHMS(mig2)}</span></div>
+    <div class="row"><span>Irtipa Hilal Ba'dal-gurub</span><span>${toDMS(irtipa2)}</span></div>
+    <div class="row"><span>Mukstul Hilal Fauqol-ufq</span><span>${toDMS(mukstulhilal2)}</span></div>
+    <div class="row"><span>Kamyah Ardl-qomar</span><span>${toDMS(kamyah)}</span></div>
+    <div class="row"><span>Qous nuril-hilal</span><span>${toDMS(nurilhilal2)}</span></div>
 <div class="ringkasan"><b>* RINGKASAN *</b></div>
     <div class="poinHasilHisab">
-    <div class="row"><span>Awal Bulan </span><span>${bulanYangDimaksud} ${tahunYangDimaksud} H</span></div>
-    <div class="row"><span>Jatuh Pada Hari </span><span>${jatuhhari} ${hasilTanggalMasehi} M</span></div>
+    <div class="row"><span>Awal Bulan </span>
+    <span>${bulanYangDimaksud} ${tahunYangDimaksud} H</span></div>
+    <div class="row"><span>Jatuh Pada Hari </span>
+    <span>${jatuhhari} ${hasilTanggalMasehi} M</span></div>
     <div class="row"><span>Ijtima Terjadi Pada ${tjdIjt}</span><span> ${yaqoulijtima}</span></div>
-    <div class="row"><span>Jam Ijtima  </span><span>${jmsiz2}:${jmsiz4} WIS | ${jmsig2}:${jmsig4} WGB </span></div>
-    <div class="row"><span>Ketinggian Hilal </span><span>{Malam ${yaqoulijtima2}} ${jmipa2}°${jmipa4}'</span></div>
+    <div class="row"><span>Jam Ijtima </span>
+    <span>${toHMS(jmsiz)} WIS | ${toHMS(jmsig)} WGB </span></div>
+    <div class="row"><span>Ketinggian Hilal </span>
+    <span>{Malam ${yaqoulijtima2}} ${toDMS(jmipa)}'</span></div>
     <div class="row"><span>Patokan Imkan </span><span>${ptkimkan} | [${ikngoerikn}]</span></div>
-    <div class="row"><span>Lama Hilal diatas Ufuk </span><span>${jmmks2}:${jmmks4}</span></div>
+    <div class="row"><span>Lama Hilal diatas Ufuk </span><span>${toDMS(jmmks)}</span></div>
     <div class="row"><span>Condongnya Hilal Miring ke </span><span>${mq3}</span></div>
-    <div class="row"><span>Cahaya Hilal </span><span>${qnh2}°${qnh4}</span></div>
+    <div class="row"><span>Cahaya Hilal </span>
+    <span>${toDMS(qnh)}</span></div>
     </div>
     
 
