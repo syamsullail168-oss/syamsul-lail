@@ -141,7 +141,7 @@ const pasaran   = ['Legi','Pahing','Pon','Wage','Kliwon'];
 // HITUNG BERAPA HARI SETIAP BULANNYA DARI HASIL HISAB SULAMUN NAYIREIN
 const hijriMonthLengths = {
   1446:[30,29,30,29,30,29,30,29,30,29,29,29],
-  1447:[30,29,30,29,30,30,30,30,29,29,30,29],
+  1447:[30,29,30,29,30,30,30,30,29,30,29,29],
   1448:[30,29,29,30,30,29,30,30,30,29,30,29],
 };
 
@@ -1299,7 +1299,7 @@ const dataKonversi = {
         8: "Pahing, 20 Januari 2026",
         9: "Pahing, 19 Februari 2026",
         10: "Legi, 20 Maret 2026",
-        11: "Kliwon, 18 April 2026",
+        11: "Legi, 19 April 2026",
         12: "Kliwon 18 Mei 2026"
     },
     1448: {
