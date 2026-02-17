@@ -456,7 +456,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
     
-    const v = prompt('        Masukkan ketinggian tempat', settings.altitude);
+    const v = prompt('Masukkan ketinggian tempat', settings.altitude);
     if (v === null || isNaN(v)) return;
     
     settings.altitude = Number(v);
