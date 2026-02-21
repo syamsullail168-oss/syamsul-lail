@@ -13,7 +13,7 @@ const r2d = r => r * 180 / Math.PI;
 function time(x) {
   x = (x + 24) % 24;
   let h = Math.floor(x);
-  let m = Math.round((x - h) * 60);
+  let m = Math.ceil((x - h) * 60);
   if (m === 60) {
     h = (h + 1) % 24;
     m = 0;
@@ -1296,10 +1296,12 @@ let hissohsaah = lookupHissohsaah.find(range => hasilAkhirKhosoh3 >= range.min).
   let tadilalamah = budumuadal * hissohsaah; let tadilalamah2 = tadilalamah.toFixed(3)
   let jkt = hasilAkhirAlamah3 - tadilalamah;
   let jkt2 = jkt <= 0 ? jkt + 168 : jkt;
-  let jkt3 = jkt2.toFixed(3);
-  let selisihwaktu = Math.abs(koorlong - 106.8272) /15; let selisihwaktu2 = selisihwaktu.toFixed(3)
-  let bittatbieq = (jkt2 - selisihwaktu) +1;
-  let bittatbieq2 = bittatbieq.toFixed(3);
+// Jika longitude user lebih besar dari longitude jakarta maka posisi user berada di timuran jakarta seperti daerah cianjur, waktu lebih lambat.
+// Jika kurang maka di baratan jakarta seperti daerah tangerang, waktu lebih cepat.
+
+  let selisihwaktu = (koorlong -106.81666) /15;
+  let bittatbieq = jkt2  +selisihwaktu +1;
+  
   let ij = bittatbieq / 24; 
   let ijt = Math.trunc(ij);
   
@@ -1469,6 +1471,26 @@ const toHMS = x => {
   return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
 };
 
+const toJMD = x => {
+  const sign = x < 0 ? '-' : '';
+  const absX = Math.abs(x);
+  
+  const h = Math.floor(absX);
+  const mDecimal = (absX - h) * 60;
+  const m = Math.floor(mDecimal);
+  let s = (mDecimal - m) * 60;
+  
+  s = Math.round(s);
+  
+  // Penanganan jika s = 60
+  if (s === 60) {
+    s = 0;
+    // Penanganan lebih lanjut jika perlu
+  }
+  
+  return `${sign}${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+};
+
 // Menit desimal → Menit & Detik
 function menitKeMS(x){
   const sign = x < 0 ? '−' : '';
@@ -1516,7 +1538,43 @@ function toBurujDMS(x){
 
   return `${sign}${buruj}<sup>b</sup> ${d}° ${m}′ ${s}″`;
 }
-    
+
+function toHariJMD(x) {
+  const sign = x < 0 ? '-' : '';
+  x = Math.abs(x);
+
+  // Normalisasi 0–168 (siklus mingguan)
+  x = ((x % 168) + 168) % 168;
+
+  const hari = Math.floor(x / 24);
+  const sisaJam = x - (hari * 24);
+
+  let h = Math.floor(sisaJam);
+  const mDecimal = (sisaJam - h) * 60;
+  let m = Math.floor(mDecimal);
+  let s = Math.round((mDecimal - m) * 60); // Dibulatkan ke detik terdekat
+
+  // Koreksi jika detik overflow
+  if (s >= 60) {
+    s = 0;
+    m += 1;
+  }
+
+  // Koreksi jika menit overflow
+  if (m >= 60) {
+    m = 0;
+    h += 1;
+  }
+
+  // Koreksi jika jam overflow ke hari berikutnya
+  if (h >= 24) {
+    h = 0;
+    // Tidak menambah hari karena format tetap dalam minggu
+  }
+
+  return `${sign}${hari}<sup>h</sup> ${h}:${m}:${s}`;
+}
+
     let y = thnm;
     let m = b_masehi;
     if (m <= 2) { y--; m += 12; }
@@ -1700,10 +1758,10 @@ const bulanHijriyah = ["Dzul Hijjah", "Muharom", "Sopar", "Robiul Awal", "Robius
     <div class="row"><span>Thuul Syams</span><span>${toBurujDMS(thulsyamsi2)}</span></div>
     <div class="row"><span>Hissoh Saah</span><span>${toDMS(hissohsaah)}</span></div>
     <div class="row"><span>Ta'dil Alamah</span><span>${toDMS(tadilalamah2)}</span></div>
-    <div class="row"><span>Alamah Muadalah JKT</span><span>${toDMS(jkt3)}</span></div>
+    <div class="row"><span>Alamah Muadalah JKT</span><span>${toHariJMD(jkt2)}</span></div>
     <div class="row"><span>Thul Balad - Longitude</span><span>${toDMS(koorlong)}</span></div>
-    <div class="row"><span>Selisih Waktu</span><span>${toHMS(selisihwaktu2)}</span></div>
-    <div class="row"><span>Alamah Muadalah Bibaladika +1</span><span>${toDMS(bittatbieq2)}</span></div>
+    <div class="row"><span>Selisih Waktu</span><span>${toJMD(selisihwaktu)}</span></div>
+    <div class="row"><span>Alamah Muadalah Bibaladika +1</span><span>${toHariJMD(bittatbieq)}</span></div>
     <div class="row"><span>Yaqoul Ijtima</span><span>${indexYaqoulijtima}<sup>h</sup> ${yaqoulijtima}</span></div>
     <div class="row"><span>Arudh Balad - Latitude</span><span>${toDMS(koorlat)}</span></div> 
     <div class="row"><span>Waktu Zawal Saat Ijtima</span><span>${toHMS(zawal)}</span></div>
