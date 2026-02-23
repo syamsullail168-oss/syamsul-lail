@@ -138,6 +138,7 @@ function updateSholatUI(j) {
 // ============================================
 function getNextSholat(jadwal) {
   const urutan = [
+    { id: 'imsak', label: 'Imsak' },
     { id: 'subuh', label: 'Subuh' },
     { id: 'terbit', label: 'Terbit' },
     { id: 'dhuha', label: 'Dhuha' },
